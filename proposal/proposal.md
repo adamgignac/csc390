@@ -30,6 +30,7 @@ The user should be able to:
 - Link to a note from another note
 - View and edit previous notes
 - Save a list of upcoming assignments for each course
+- Search their notes
 
 The software should:
 - Automatically mark a note with the date and time it was created
@@ -60,6 +61,7 @@ Trust
 -----
 - The software should store notes in a format that will be accessible without needed to use the software, so that notes will not be locked in to the platform
 - The software WILL NOT replace proper studying techniques, merely enhance the student's work
+
 References
 ==========
 
@@ -74,11 +76,12 @@ Development
 -----------
 - Eclipse with PyDev
 - Git
+- Python
 
 Deployment
 ----------
 - Linux
-
+- Python
 User Stories
 ============
 
@@ -92,4 +95,5 @@ As a student, I want to:
 - add a web source (reference, Discovery, etc) and reference it from a note
 - draw a diagram and insert it into a note
 - install the application on an Ubuntu system (and potentially a Windows/Mac system)
+- search my notes
 

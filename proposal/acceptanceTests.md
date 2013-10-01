@@ -11,6 +11,7 @@ The user should be able to:
 - Link to a note from another note
 - View and edit previous notes
 - Save a list of upcoming assignments for each course
+- Search their notes
 
 The software should:
 - Automatically mark a note with the date and time it was created

@@ -23,3 +23,4 @@ Trust
 -----
 - The software should store notes in a format that will be accessible without needed to use the software, so that notes will not be locked in to the platform
 - The software WILL NOT replace proper studying techniques, merely enhance the student's work
+
