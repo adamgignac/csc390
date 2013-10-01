@@ -15,3 +15,4 @@ The user should be able to:
 The software should:
 - Automatically mark a note with the date and time it was created
 - Display a reminder of upcoming assignments
+

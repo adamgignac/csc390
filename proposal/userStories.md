@@ -11,3 +11,4 @@ As a student, I want to:
 - add a web source (reference, Discovery, etc) and reference it from a note
 - draw a diagram and insert it into a note
 - install the application on an Ubuntu system (and potentially a Windows/Mac system)
+
