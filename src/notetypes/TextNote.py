@@ -6,7 +6,7 @@ Created on 2013-10-19
 from gi.repository import Gtk, WebKit
 from notetypes.AbstractNote import AbstractNote
 
-class TextNote(Gtk.Box, AbstractNote):
+class TextNote(Gtk.ScrolledWindow, AbstractNote):
     '''
     A text-based note.
     '''
@@ -17,7 +17,7 @@ class TextNote(Gtk.Box, AbstractNote):
         Constructor. If sourceFile is specified, the contents of
         sourceFile will be contained in the page.
         '''
-        super(TextNote, self).__init__(self)
+        super(TextNote, self).__init__(None, None)
         webview = WebKit.WebView()
         self.add(webview)
         webview.set_editable(True)
