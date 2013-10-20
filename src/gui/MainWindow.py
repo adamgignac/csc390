@@ -5,6 +5,7 @@ Created on 2013-10-04
 '''
 
 from gi.repository import Gtk
+from notetypes.TextNote import TextNote #TODO: Import all into a list
 
 class MainWindow():
     '''
@@ -25,6 +26,10 @@ class MainWindow():
         }
         
         builder.connect_signals(handlers)
+        
+        testNote = TextNote()
+        builder.get_object("notebook").add(testNote)
+        
         window.show_all()
     
     def handleWindowExit(self, *args):
