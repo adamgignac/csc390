@@ -34,6 +34,20 @@ class TextNote(Gtk.ScrolledWindow, AbstractNote):
         Returns a list of toolbar items that are specific to the note
         type (i.e. text formatting for text notes, drawing tools for
         a diagram, etc)
-        This should be of the form: [(icon, callback), ...]
         '''
-        raise NotImplementedError()
+        boldButton = Gtk.ToolButton(Gtk.STOCK_BOLD)
+        boldButton.connect('clicked', self.onBoldClicked)
+        italicButton = Gtk.ToolButton(Gtk.STOCK_ITALIC)
+        italicButton.connect('clicked', self.onItalicClicked)
+        underlineButton = Gtk.ToolButton(Gtk.STOCK_UNDERLINE)
+        underlineButton.connect('clicked', self.onUnderlineClicked)
+        return [boldButton, italicButton, underlineButton]
+    
+    def onBoldClicked(self, button):
+        print "You clicked the BOLD button"
+    
+    def onItalicClicked(self, button):
+        print "You clicked the ITALIC button"
+    
+    def onUnderlineClicked(self, button):
+        print "You clicked the UNDERLINE button"
