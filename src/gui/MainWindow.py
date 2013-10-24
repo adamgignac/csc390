@@ -6,6 +6,7 @@ Created on 2013-10-04
 
 from gi.repository import Gtk
 from notetypes.TextNote import TextNote #TODO: Import all into a list
+from gui.TabLabel import TabLabel
 import datetime
 
 class MainWindow():
@@ -22,22 +23,27 @@ class MainWindow():
         self.builder.add_from_file("mainWindow.glade")
         window = self.builder.get_object("baseWindow")
         
-        window.connect('destroy', self.handleWindowExit)
-        
+        #Connect some signals
+        window.connect('destroy', self.onWindowDestroy)
         self.builder.get_object('newMenu').connect('clicked', self.onNewClicked)
+        self.builder.get_object('notebook').connect('switch-page', self.onTabChanged)
         
-        notebook = self.builder.get_object('notebook')
-        notebook.connect('switch-page', self.onTabChanged)
-        
+        #Temporary
         testNote = TextNote()
-        notebook.add(testNote)
-        
+        self.createNewPage(testNote)
         testNote2 = TextNote()
-        notebook.add(testNote2)
+        self.createNewPage(testNote2)
 
         window.show_all()
     
-    def handleWindowExit(self, *args):
+    def createNewPage(self, pageContent, labelString="New page"):
+        '''
+        Append the given item to the notebook, creating a proper
+        label and close button on the tab.
+        '''
+        self.builder.get_object('notebook').append_page(pageContent, TabLabel(labelString))
+    
+    def onWindowDestroy(self, *args):
         '''
         Called when the window is destroyed via
         clicking on the 'X' or the 'Quit' menu
@@ -66,10 +72,15 @@ class MainWindow():
         Called when the New button is clicked
         '''
         
+        #Get the current date and time
         now = datetime.datetime.now()
-        print "Current date: %d/%d/%d" % (now.year, now.month, now.day)
+        dateString = "%d/%d/%d" % (now.year, now.month, now.day)
         page = TextNote()
-        self.builder.get_object('notebook').add(page)
+        self.createNewPage(page, dateString)
+        self.builder.get_object('baseWindow').show_all()
+    
+    def onTabClosed(self, button):
+        pass
 
 if __name__ == "__main__":
     w = MainWindow()
