@@ -90,6 +90,7 @@ class MainWindow():
     def onMenuAboutClicked(self, menuItem):
         aboutWindow = self.builder.get_object("aboutDialog")
         aboutWindow.run()
+        aboutWindow.hide()
 
 if __name__ == "__main__":
     w = MainWindow()
