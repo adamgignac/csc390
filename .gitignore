@@ -1,3 +1,8 @@
 # Compiled Python files #
 #########################
 *.pyc
+
+# Eclipse-generated files #
+###########################
+.project
+.pydevproject
