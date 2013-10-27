@@ -20,13 +20,17 @@ class MainWindow():
         Constructor
         '''
         self.builder = Gtk.Builder()
-        self.builder.add_from_file("mainWindow.glade")
-        window = self.builder.get_object("baseWindow")
+        self.builder.add_from_file("isidore.glade")
         
         #Connect some signals
-        window.connect('destroy', self.onWindowDestroy)
-        self.builder.get_object('newMenu').connect('clicked', self.onNewClicked)
-        self.builder.get_object('notebook').connect('switch-page', self.onTabChanged)
+        signalHandlers = {
+            'on_baseWindow_destroy':self.onWindowDestroy,
+            'on_menu_quit_activate':self.onWindowDestroy,
+            'on_menu_help_about_activate':self.onMenuAboutClicked,
+            'on_newMenu_clicked':self.onNewClicked,
+            'on_notebook_switch_page':self.onTabChanged,
+        }
+        self.builder.connect_signals(signalHandlers)
         
         #Temporary
         testNote = TextNote()
@@ -34,7 +38,7 @@ class MainWindow():
         testNote2 = TextNote()
         self.createNewPage(testNote2)
 
-        window.show_all()
+        self.builder.get_object("baseWindow").show_all()
     
     def createNewPage(self, pageContent, labelString="New page"):
         '''
@@ -80,7 +84,12 @@ class MainWindow():
         self.builder.get_object('baseWindow').show_all()
     
     def onTabClosed(self, button):
+        #TODO: (Ask to)? save the contents of the tab
         pass
+    
+    def onMenuAboutClicked(self, menuItem):
+        aboutWindow = self.builder.get_object("aboutDialog")
+        aboutWindow.run()
 
 if __name__ == "__main__":
     w = MainWindow()

@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkAboutDialog" id="aboutDialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">Isidore</property>
+    <property name="version">0.1</property>
+    <property name="comments" translatable="yes">The last scholar of the ancient world...</property>
+    <property name="authors">Adam Gignac &lt;gignac.adam@gmail.com&gt;</property>
+    <property name="license_type">gpl-3-0</property>
+  </object>
   <object class="GtkWindow" id="baseWindow">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Isidore</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
-    <signal name="destroy" handler="onDestroy" swapped="no"/>
+    <signal name="destroy" handler="on_baseWindow_destroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>
@@ -33,7 +43,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="activate" handler="onDestroy" swapped="no"/>
+                        <signal name="activate" handler="on_menu_quit_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -130,6 +140,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_menu_help_about_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -160,6 +171,7 @@
                     <property name="label" translatable="yes">New...</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-new</property>
+                    <signal name="clicked" handler="on_newMenu_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -207,6 +219,22 @@
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkEntry" id="searchBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="invisible_char">•</property>
+                <property name="primary_icon_stock">gtk-find</property>
+                <property name="placeholder_text">Search...</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="padding">5</property>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -240,6 +268,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="scrollable">True</property>
+                <signal name="switch-page" handler="on_notebook_switch_page" swapped="no"/>
                 <child>
                   <placeholder/>
                 </child>
