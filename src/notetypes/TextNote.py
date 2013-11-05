@@ -4,7 +4,7 @@ Created on 2013-10-19
 @author: Adam Gignac
 '''
 from gi.repository import Gtk, WebKit
-from notetypes.AbstractNote import AbstractNote
+from AbstractNote import AbstractNote
 
 class TextNote(Gtk.ScrolledWindow, AbstractNote):
     '''
@@ -81,11 +81,9 @@ class TextNote(Gtk.ScrolledWindow, AbstractNote):
         redo = Gtk.ToolButton(Gtk.STOCK_REDO)
         redo.connect('clicked', self.onRedoClicked)
         
-        return [bold, italic, underline, embed, indent,
-                unindent, unorderedList, orderedList,
-                leftJustify, centerJustify, rightJustify,
-                undo, redo
-        ]
+        return [bold, italic, underline, embed, indent, unindent, 
+                unorderedList, orderedList, leftJustify, centerJustify,
+                rightJustify, undo, redo]
     
     def onBoldClicked(self, button):
         self.webview.execute_script("document.execCommand('bold', false, false);")
@@ -98,8 +96,8 @@ class TextNote(Gtk.ScrolledWindow, AbstractNote):
     
     def onEmbedClicked(self, button):
         #TODO: Present popup asking about what to embed
-        html = "<iframe src='http://en.wikipedia.org/wiki/JavaScript' style='width:80%;'></iframe>"
-        self.webview.execute_script('document.execCommand("insertHTML", false, "%s");' % (html,))
+        html = '<iframe src="http://en.wikipedia.org/wiki/JavaScript" style="width:80%; height:200px;"></iframe>'
+        self.webview.execute_script("document.execCommand('insertHTML', false, '%s');" % (html,))
     
     def onIndentClicked(self, button):
         self.webview.execute_script("document.execCommand('indent', false, false);")

@@ -73,7 +73,8 @@ class MainWindow():
     
     def onNewClicked(self, button):
         '''
-        Called when the New button is clicked
+        Called when the New button is clicked. Create a new page
+        stamped with today's date.
         '''
         
         #Get the current date and time
@@ -84,10 +85,17 @@ class MainWindow():
         self.builder.get_object('baseWindow').show_all()
     
     def onTabClosed(self, button):
+        '''
+        Called when a tab is closed. Save the contents of the tab.
+        '''
         #TODO: (Ask to)? save the contents of the tab
         pass
     
     def onMenuAboutClicked(self, menuItem):
+        '''
+        Called when the About menu item is selected. Opens the
+        about dialog.
+        '''
         aboutWindow = self.builder.get_object("aboutDialog")
         aboutWindow.run()
         aboutWindow.hide()
