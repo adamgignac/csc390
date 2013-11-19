@@ -4,6 +4,9 @@ Created on 2013-10-19
 @author: Adam Gignac
 '''
 from gi.repository import Gtk, WebKit
+
+import os
+
 from AbstractNote import AbstractNote
 
 class TextNote(Gtk.ScrolledWindow, AbstractNote):
@@ -19,34 +22,32 @@ class TextNote(Gtk.ScrolledWindow, AbstractNote):
         '''
         super(TextNote, self).__init__(None, None)
         self.webview = WebKit.WebView()
-        #Populate the page with dummy text as proof of concept
-        content = """
-<body>
-    <b>This is bold</b>
-    <i>This is italicized</i>
-    <u>This is underlined</u>
-    <ul>
-        <li>This is an unordered list</li>
-        <li>With multiple items</li>
-    </ul>
-    <ol>
-        <li>This is an ordered list</li>
-        <li>With multiple items</li>
-    </ol>
-    <p>Wikipedia page embedded:</p>
-    <iframe src="https://en.wikipedia.org/wiki/HTML_element#Frames" style="width:80%"></iframe>
-</body>
-""" 
+        #Populate the page with template
+        TEMPLATE_FILE = "/home/adam/git/csc390/src/notetypes/TextNoteTemplate.html"
+        with open(TEMPLATE_FILE, 'r') as f:
+            try:
+                content = "\n".join(f.readlines())
+            except:
+                content = "Well, this is awkward..."
+        
         self.webview.load_html_string(content, "file:///")
         self.add(self.webview)
         self.webview.set_editable(True)
+        self.settings = self.webview.get_settings()
+        self.settings.set_property("enable-spell-checking", True) #May not work
         self.show_all()
 
     def saveContents(self):
         '''
         Extracts the contents of the page and writes them to a file.
         '''
-        raise NotImplementedError()
+        DATA_DIR = os.path.expanduser("~/.isidore/")
+        with open(DATA_DIR + "testFile.html", 'w') as f:
+            #Get HTML by packing it into the document title
+            self.webview.execute_script("document.title=document.documentElement.innerHTML;")
+            #Dump title to file
+            f.write(self.webview.get_main_frame().get_title())
+            
 
     def getContextToolbarItems(self):
         '''

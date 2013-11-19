@@ -223,6 +223,7 @@
               <object class="GtkEntry" id="searchBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="buffer">searchBuffer</property>
                 <property name="invisible_char">•</property>
                 <property name="primary_icon_stock">gtk-find</property>
                 <property name="placeholder_text">Search...</property>
@@ -303,4 +304,10 @@
       </object>
     </child>
   </object>
+  <object class="GtkDialog" id="embedDialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="type_hint">dialog</property>
+  </object>
+  <object class="GtkEntryBuffer" id="searchBuffer"/>
 </interface>
