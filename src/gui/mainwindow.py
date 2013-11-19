@@ -5,9 +5,11 @@ Created on 2013-10-04
 '''
 
 from gi.repository import Gtk
-from notetypes.TextNote import TextNote #TODO: Import all into a list
-from gui.TabLabel import TabLabel
+from notetypes.textnote import TextNote #TODO: Import all into a list
+from gui.tablabel import TabLabel
+
 import datetime
+import os
 
 class MainWindow():
     '''
@@ -20,7 +22,7 @@ class MainWindow():
         Constructor
         '''
         self.builder = Gtk.Builder()
-        self.builder.add_from_file("isidore.glade")
+        self.builder.add_from_file(os.path.join(os.path.dirname(__file__), "isidore.glade"))
         
         #Connect some signals
         signalHandlers = {

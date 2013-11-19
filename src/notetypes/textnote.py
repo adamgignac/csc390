@@ -7,7 +7,7 @@ from gi.repository import Gtk, WebKit
 
 import os
 
-from AbstractNote import AbstractNote
+from abstractnote import AbstractNote
 
 class TextNote(Gtk.ScrolledWindow, AbstractNote):
     '''

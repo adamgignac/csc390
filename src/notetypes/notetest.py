@@ -1,4 +1,4 @@
-from TextNote import TextNote
+from textnote import TextNote
 import unittest
 
 class TextNoteTestCase(unittest.TestCase):
