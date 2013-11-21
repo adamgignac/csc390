@@ -6,6 +6,7 @@ Created on 2013-10-04
 
 from gi.repository import Gtk
 from notetypes.textnote import TextNote #TODO: Import all into a list
+from notetypes.searchresult import SearchResult
 from gui.tablabel import TabLabel
 
 import datetime
@@ -37,8 +38,8 @@ class MainWindow():
         #Temporary
         testNote = TextNote()
         self.createNewPage(testNote)
-        testNote2 = TextNote()
-        self.createNewPage(testNote2)
+        testNote2 = SearchResult("process")
+        self.createNewPage(testNote2, "Search Results")
 
         self.builder.get_object("baseWindow").show_all()
     

@@ -15,20 +15,26 @@ class TextNote(Gtk.ScrolledWindow, AbstractNote):
     '''
 
 
-    def __init__(self, sourceFile=None):
+    def __init__(self, content=None):
         '''
         Constructor. If sourceFile is specified, the contents of
         sourceFile will be contained in the page.
         '''
         super(TextNote, self).__init__(None, None)
+        
+        builder = Gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(__file__), "embedDialog.glade"))
+        self.embedDialog = builder.get_object("embedDialog")
+        
         self.webview = WebKit.WebView()
         #Populate the page with template
-        TEMPLATE_FILE = "/home/adam/git/csc390/src/notetypes/TextNoteTemplate.html"
-        with open(TEMPLATE_FILE, 'r') as f:
-            try:
-                content = "\n".join(f.readlines())
-            except:
-                content = "Well, this is awkward..."
+        if content is None:
+            TEMPLATE_FILE = "/home/adam/git/csc390/src/notetypes/TextNoteTemplate.html"
+            with open(TEMPLATE_FILE, 'r') as f:
+                try:
+                    content = "\n".join(f.readlines())
+                except:
+                    content = "Well, this is awkward..."
         
         self.webview.load_html_string(content, "file:///")
         self.add(self.webview)
@@ -97,8 +103,11 @@ class TextNote(Gtk.ScrolledWindow, AbstractNote):
     
     def onEmbedClicked(self, button):
         #TODO: Present popup asking about what to embed
-        html = '<iframe src="http://en.wikipedia.org/wiki/JavaScript" style="width:80%; height:200px;"></iframe>'
-        self.webview.execute_script("document.execCommand('insertHTML', false, '%s');" % (html,))
+        #html = '<iframe src="http://en.wikipedia.org/wiki/JavaScript" style="width:80%; height:200px;"></iframe>'
+        #self.webview.execute_script("document.execCommand('insertHTML', false, '%s');" % (html,))
+        if self.embedDialog.run() == Gtk.ResponseType.OK:
+            print "Embed"
+        self.embedDialog.hide()
     
     def onIndentClicked(self, button):
         self.webview.execute_script("document.execCommand('indent', false, false);")
