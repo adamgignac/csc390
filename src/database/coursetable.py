@@ -10,7 +10,7 @@ class CourseTable(DatabaseTable):
     '''
     Manages the database table related to Courses
     '''
-    columnDefs = {
+    columns = {
         "name":"STRING",
         "code":"STRING",
     }

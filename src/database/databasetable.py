@@ -13,7 +13,7 @@ class DatabaseTable(object):
     the name of the table that should be created in the database
     '''
 
-    columnDefs = {}
+    columns = {}
 
     def __init__(self, connection):
         '''
@@ -33,10 +33,32 @@ class DatabaseTable(object):
             self.ensureTableExists()
     
     def ensureTableExists(self):
-        if len(type(self).columnDefs) == 0:
+        if len(type(self).columns) == 0:
             raise Exception("This is an abstract class and should not be instantiated")
         query = """CREATE TABLE IF NOT EXISTS %s (%s)""" % (self.tableName, 
-            ", ".join(["%s %s" % (k,v) for k,v in type(self).columnDefs.items()])
+            ", ".join(["%s %s" % (k,v) for k,v in type(self).columns.items()])
         )
         print query
         self.cursor.execute(query)
+    
+    def insert(self, **kwargs):
+        columnNames = []
+        columnValues = []
+        for key in kwargs.keys():
+            if key not in type(self).columns.keys():
+                raise Exception("Improper column specified")
+            columnNames.append('"' + key + '"')
+            columnValues.append('"' + kwargs[key] + '"')
+        query = """INSERT INTO %s (%s) VALUES (%s)""" % (self.tableName,
+            ", ".join(columnNames),
+            ", ".join(columnValues) 
+            )
+        self.cursor.execute(query)
+        
+    
+    def listAll(self):
+        query = """SELECT * FROM %s""" % (self.tableName)
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        for row in rows:
+            print row
