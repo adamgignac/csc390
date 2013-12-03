@@ -3,13 +3,13 @@ Created on 2013-11-20
 
 @author: adam
 '''
-from abstractnote import AbstractNote
+from page import Page
 from tools.searchengine import SearchEngine
 
 from gi.repository import Gtk, WebKit
 import os
 
-class SearchResult(Gtk.ScrolledWindow, AbstractNote):
+class SearchResult(Gtk.ScrolledWindow, Page):
     '''
     Displays the results of a search
     '''
@@ -58,3 +58,7 @@ class SearchResult(Gtk.ScrolledWindow, AbstractNote):
         label = Gtk.ToolItem()
         label.add(Gtk.Label("Search for: %s" % (self.searchTerm,)))
         return [label]
+    
+    def saveContents(self):
+        """There is no need to save search results"""
+        pass

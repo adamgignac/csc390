@@ -41,6 +41,7 @@ class MainWindow():
             'on_menu_help_about_activate':self.onMenuAboutClicked,
             'on_newMenu_clicked':self.onNewClicked,
             'on_notebook_switch_page':self.onTabChanged,
+            'on_treeview_row_activated':self.onTreeviewRowActivated,
         }
         self.builder.connect_signals(signalHandlers)
         
@@ -73,6 +74,7 @@ class MainWindow():
         label and close button on the tab.
         '''
         label = TabLabel(labelString)
+        pageContent.setFilename(labelString)
         num = self.builder.get_object('notebook').append_page(pageContent, label)
         label.connect('close-clicked', self.onTabClosed, pageContent)
     
@@ -116,15 +118,21 @@ class MainWindow():
     
     def _getDate(self):
         now = datetime.datetime.now()
-        dateString = "%d/%d/%d" % (now.year, now.month, now.day)
+        dateString = "%d-%d-%d" % (now.year, now.month, now.day)
         return dateString
     
-    def onTabClosed(self, button, data=None):
+    def onTabClosed(self, button, page=None):
         '''
         Called when a tab is closed. Save the contents of the tab.
         '''
         #TODO: (Ask to)? save the contents of the tab
-        n = self.builder.get_object('notebook').page_num(data)
+        try:
+            page.saveContents()
+        except NotImplementedError:
+            pass
+        except IOError:
+            print "Failed to save page"
+        n = self.builder.get_object('notebook').page_num(page)
         self.builder.get_object('notebook').remove_page(n)
     
     def onMenuAboutClicked(self, menuItem):
@@ -135,6 +143,9 @@ class MainWindow():
         aboutWindow = self.builder.get_object("aboutDialog")
         aboutWindow.run()
         aboutWindow.hide()
+    
+    def onTreeviewRowActivated(self, treeview, iter, path):
+        print iter, path
 
 if __name__ == "__main__":
     w = MainWindow()
