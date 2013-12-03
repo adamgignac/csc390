@@ -4,13 +4,13 @@ Created on 2013-10-04
 @author: Adam Gignac
 '''
 
-class AbstractNote(object):
+class Page(object):
     '''
     Interface for note types
     '''
 
 
-    def __init__(self, sourceFile=None):
+    def __init__(self):
         '''
         Constructor. If sourceFile is specified, the contents of
         sourceFile will be contained in the page.

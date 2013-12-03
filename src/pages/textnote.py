@@ -7,15 +7,16 @@ from gi.repository import Gtk, WebKit
 
 import os
 
-from abstractnote import AbstractNote
+from page import Page
+from tools import constants
 
-class TextNote(Gtk.ScrolledWindow, AbstractNote):
+class TextNote(Gtk.ScrolledWindow, Page):
     '''
     A text-based note.
     '''
 
 
-    def __init__(self, content=None):
+    def __init__(self, filename=None):
         '''
         Constructor. If sourceFile is specified, the contents of
         sourceFile will be contained in the page.
@@ -28,13 +29,16 @@ class TextNote(Gtk.ScrolledWindow, AbstractNote):
         
         self.webview = WebKit.WebView()
         #Populate the page with template
-        if content is None:
-            TEMPLATE_FILE = "/home/adam/git/csc390/src/notetypes/TextNoteTemplate.html"
-            with open(TEMPLATE_FILE, 'r') as f:
-                try:
-                    content = "\n".join(f.readlines())
-                except:
-                    content = "Well, this is awkward..."
+        if filename is None:
+            targetFile = "/home/adam/git/csc390/src/notetypes/TextNoteTemplate.html"
+            self.filename = targetFile
+        else:
+            targetFile = filename
+        with open(targetFile, 'r') as f:
+            try:
+                content = "\n".join(f.readlines())
+            except:
+                content = "Well, this is awkward..."
         
         self.webview.load_html_string(content, "file:///")
         self.add(self.webview)
@@ -47,13 +51,21 @@ class TextNote(Gtk.ScrolledWindow, AbstractNote):
         '''
         Extracts the contents of the page and writes them to a file.
         '''
-        DATA_DIR = os.path.expanduser("~/.isidore/")
-        with open(DATA_DIR + "testFile.html", 'w') as f:
+        
+        with open(os.path.join(constants.NOTES_DIR, self.filename), 'w') as f:
             #Get HTML by packing it into the document title
             self.webview.execute_script("document.title=document.documentElement.innerHTML;")
             #Dump title to file
             f.write(self.webview.get_main_frame().get_title())
             
+    
+    def setFilename(self, filename):
+        self.filename = filename
+        
+    
+    def getFilename(self):
+        return self.filename
+
 
     def getContextToolbarItems(self):
         '''

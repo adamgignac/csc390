@@ -4,5 +4,5 @@ setup(name="Isidore",
     description='Notetaking for Students',
     author="Adam Gignac",
     author_email="gignac.adam@gmail.com",
-    py_modules=['src/gui', 'src/notetypes', 'src/tools'],
+    py_modules=['src/gui', 'src/pages', 'src/tools'],
 )
