@@ -38,7 +38,6 @@ class DatabaseTable(object):
         query = """CREATE TABLE IF NOT EXISTS %s (%s)""" % (self.tableName, 
             ", ".join(["%s %s" % (k,v) for k,v in type(self).columns.items()])
         )
-        print query
         self.cursor.execute(query)
     
     def insert(self, **kwargs):
@@ -59,6 +58,5 @@ class DatabaseTable(object):
     def listAll(self):
         query = """SELECT * FROM %s""" % (self.tableName)
         self.cursor.execute(query)
-        rows = self.cursor.fetchall()
-        for row in rows:
-            print row
+        return self.cursor.fetchall()
+        

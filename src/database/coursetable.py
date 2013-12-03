@@ -11,8 +11,8 @@ class CourseTable(DatabaseTable):
     Manages the database table related to Courses
     '''
     columns = {
-        "name":"STRING",
-        "code":"STRING",
+        "name":"TEXT",
+        "code":"TEXT",
     }
 
 if __name__ == "__main__":

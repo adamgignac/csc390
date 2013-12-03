@@ -8,9 +8,13 @@ from gi.repository import Gtk
 from notetypes.textnote import TextNote #TODO: Import all into a list
 from notetypes.searchresult import SearchResult
 from gui.tablabel import TabLabel
+from database.coursetable import CourseTable
+from database.notetable import NoteTable
+from tools import constants
 
 import datetime
 import os
+import sqlite3
 
 class MainWindow():
     '''
@@ -22,6 +26,11 @@ class MainWindow():
         '''
         Constructor
         '''
+        
+        conn = sqlite3.Connection(constants.DATABASE_PATH)
+        self.coursesStore = CourseTable(conn)
+        self.notesStore = NoteTable(conn)
+        
         self.builder = Gtk.Builder()
         self.builder.add_from_file(os.path.join(os.path.dirname(__file__), "isidore.glade"))
         
@@ -35,20 +44,37 @@ class MainWindow():
         }
         self.builder.connect_signals(signalHandlers)
         
+        #Populate the treeview
+        treeviewModel = self.builder.get_object("courseListModel")
+        self.courses = self.coursesStore.listAll()
+        for code, title in self.courses: #course = (code, title)
+            self.builder.get_object("newNote_courseSelector").append_text(code)
+            iter = treeviewModel.append(None, ("%s (%s)" % (code, title),))
+            notesForCourse = self.notesStore.listAllForCourse(code)
+            for note in notesForCourse:
+                treeviewModel.append(iter, (note[0],))
+        
         #Temporary
         testNote = TextNote()
         self.createNewPage(testNote)
-        testNote2 = SearchResult("process")
-        self.createNewPage(testNote2, "Search Results")
+        self.displaySearchResults("process")
 
         self.builder.get_object("baseWindow").show_all()
+
+    def displaySearchResults(self, term):
+        resultsPage = SearchResult(term)
+        label = TabLabel("Search Results: " + term)
+        label.connect('close-clicked', self.onTabClosed, resultsPage)
+        self.builder.get_object('notebook').append_page(resultsPage, label)
     
     def createNewPage(self, pageContent, labelString="New page"):
         '''
         Append the given item to the notebook, creating a proper
         label and close button on the tab.
         '''
-        self.builder.get_object('notebook').append_page(pageContent, TabLabel(labelString))
+        label = TabLabel(labelString)
+        num = self.builder.get_object('notebook').append_page(pageContent, label)
+        label.connect('close-clicked', self.onTabClosed, pageContent)
     
     def onWindowDestroy(self, *args):
         '''
@@ -79,20 +105,27 @@ class MainWindow():
         Called when the New button is clicked. Create a new page
         stamped with today's date.
         '''
-        
-        #Get the current date and time
+        dialog = self.builder.get_object("newNoteDialog")
+        if dialog.run() == Gtk.ResponseType.OK:
+            page = TextNote()
+            course = self.builder.get_object("newNote_courseSelector").get_active_text()
+            self.createNewPage(page, course + ": " + self._getDate())
+            self.builder.get_object('baseWindow').show_all()
+            #Add to treeview
+        dialog.hide()
+    
+    def _getDate(self):
         now = datetime.datetime.now()
         dateString = "%d/%d/%d" % (now.year, now.month, now.day)
-        page = TextNote()
-        self.createNewPage(page, dateString)
-        self.builder.get_object('baseWindow').show_all()
+        return dateString
     
-    def onTabClosed(self, button):
+    def onTabClosed(self, button, data=None):
         '''
         Called when a tab is closed. Save the contents of the tab.
         '''
         #TODO: (Ask to)? save the contents of the tab
-        pass
+        n = self.builder.get_object('notebook').page_num(data)
+        self.builder.get_object('notebook').remove_page(n)
     
     def onMenuAboutClicked(self, menuItem):
         '''
