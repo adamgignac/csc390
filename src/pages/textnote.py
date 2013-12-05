@@ -30,7 +30,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
         self.webview = WebKit.WebView()
         #Populate the page with template
         if filename is None:
-            targetFile = "/home/adam/git/csc390/src/notetypes/TextNoteTemplate.html"
+            targetFile = os.path.join(os.path.dirname(__file__), "TextNoteTemplate.html")
             self.filename = targetFile
         else:
             targetFile = filename

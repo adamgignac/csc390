@@ -5,8 +5,8 @@ Created on 2013-10-04
 '''
 
 from gi.repository import Gtk
-from notetypes.textnote import TextNote #TODO: Import all into a list
-from notetypes.searchresult import SearchResult
+from pages.textnote import TextNote #TODO: Import all into a list
+from pages.searchresult import SearchResult
 from gui.tablabel import TabLabel
 from database.coursetable import CourseTable
 from database.notetable import NoteTable
@@ -45,15 +45,17 @@ class MainWindow():
         }
         self.builder.connect_signals(signalHandlers)
         
+        self.notebook = self.builder.get_object('notebook')
+        
         #Populate the treeview
         treeviewModel = self.builder.get_object("courseListModel")
         self.courses = self.coursesStore.listAll()
         for code, title in self.courses: #course = (code, title)
             self.builder.get_object("newNote_courseSelector").append_text(code)
-            iter = treeviewModel.append(None, ("%s (%s)" % (code, title),))
+            iter = treeviewModel.append(None, ("%s (%s)" % (code, title), None))
             notesForCourse = self.notesStore.listAllForCourse(code)
-            for note in notesForCourse:
-                treeviewModel.append(iter, (note[0],))
+            for date, course, path in notesForCourse:
+                treeviewModel.append(iter, (code + ": " + date, path))
         
         #Temporary
         testNote = TextNote()
@@ -66,7 +68,7 @@ class MainWindow():
         resultsPage = SearchResult(term)
         label = TabLabel("Search Results: " + term)
         label.connect('close-clicked', self.onTabClosed, resultsPage)
-        self.builder.get_object('notebook').append_page(resultsPage, label)
+        self.notebook.append_page(resultsPage, label)
     
     def createNewPage(self, pageContent, labelString="New page"):
         '''
@@ -75,8 +77,9 @@ class MainWindow():
         '''
         label = TabLabel(labelString)
         pageContent.setFilename(labelString)
-        num = self.builder.get_object('notebook').append_page(pageContent, label)
+        num = self.notebook.append_page(pageContent, label)
         label.connect('close-clicked', self.onTabClosed, pageContent)
+        self.notebook.set_current_page(num)
     
     def onWindowDestroy(self, *args):
         '''
@@ -84,7 +87,8 @@ class MainWindow():
         clicking on the 'X' or the 'Quit' menu
         item.
         '''
-        #TODO: Ask to save all open documents
+        for page in self.notebook.get_children():
+            page.saveContents()
         Gtk.main_quit()
     
     def onTabChanged(self, notebook, page, page_num):
@@ -132,8 +136,8 @@ class MainWindow():
             pass
         except IOError:
             print "Failed to save page"
-        n = self.builder.get_object('notebook').page_num(page)
-        self.builder.get_object('notebook').remove_page(n)
+        pageNumber = self.notebook.page_num(page)
+        self.notebook.remove_page(pageNumber)
     
     def onMenuAboutClicked(self, menuItem):
         '''
@@ -144,8 +148,18 @@ class MainWindow():
         aboutWindow.run()
         aboutWindow.hide()
     
-    def onTreeviewRowActivated(self, treeview, iter, path):
-        print iter, path
+    def onTreeviewRowActivated(self, treeview, path, column):
+        #Determine if the row is a course (top-level) or note (child)
+        model = treeview.get_model()
+        iter = model.get_iter(path)
+        if path.get_depth() == 1:
+            #This is a course/folder
+            #Open the folder
+            treeview.expand_row(path, True)
+        else:
+            #Open the note in a new tab
+            page = TextNote(model.get_value(iter, 1))
+            self.createNewPage(page, model.get_value(iter, 0))
 
 if __name__ == "__main__":
     w = MainWindow()
