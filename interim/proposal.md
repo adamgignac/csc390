@@ -110,6 +110,11 @@ Table 'note':
   - course FOREIGN KEY (course)
   - path TEXT
 
+Screenshots
+===========
+![Text Note](screenshots/Screenshot.png)
+![Search Results](screenshots/Screenshot 2.png)
+
 Roadmap
 =======
 
