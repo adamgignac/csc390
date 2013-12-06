@@ -115,12 +115,12 @@ class MainWindow():
         if dialog.run() == Gtk.ResponseType.OK:
             page = TextNote()
             course = self.builder.get_object("newNote_courseSelector").get_active_text()
-            self.createNewPage(page, course + ": " + self._getDate())
+            self.createNewPage(page, course + ": " + self._getCurrentDate())
             self.builder.get_object('baseWindow').show_all()
             #Add to treeview
         dialog.hide()
     
-    def _getDate(self):
+    def _getCurrentDate(self):
         now = datetime.datetime.now()
         dateString = "%d-%d-%d" % (now.year, now.month, now.day)
         return dateString
