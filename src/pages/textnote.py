@@ -6,9 +6,11 @@ Created on 2013-10-19
 from gi.repository import Gtk, WebKit
 
 import os
+from BeautifulSoup import BeautifulSoup
 
 from page import Page
 from tools import constants
+from gui.embeddialog import EmbedDialog
 
 class TextNote(Gtk.ScrolledWindow, Page):
     '''
@@ -25,7 +27,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
         
         builder = Gtk.Builder()
         builder.add_from_file(os.path.join(os.path.dirname(__file__), "embedDialog.glade"))
-        self.embedDialog = builder.get_object("embedDialog")
+        self.embedDialog = EmbedDialog()
         
         self.webview = WebKit.WebView()
         #Populate the page with template
@@ -56,7 +58,8 @@ class TextNote(Gtk.ScrolledWindow, Page):
             #Get HTML by packing it into the document title
             self.webview.execute_script("document.title=document.documentElement.innerHTML;")
             #Dump title to file
-            f.write(self.webview.get_main_frame().get_title())
+            content = self.webview.get_main_frame().get_title()
+            f.write(BeautifulSoup(content).prettify())
             
     
     def setFilename(self, filename):
@@ -115,10 +118,8 @@ class TextNote(Gtk.ScrolledWindow, Page):
     
     def onEmbedClicked(self, button):
         #TODO: Present popup asking about what to embed
-        #html = '<iframe src="http://en.wikipedia.org/wiki/JavaScript" style="width:80%; height:200px;"></iframe>'
-        #self.webview.execute_script("document.execCommand('insertHTML', false, '%s');" % (html,))
         if self.embedDialog.run() == Gtk.ResponseType.OK:
-            print "Embed"
+            print self.embedDialog.getHtml()
         self.embedDialog.hide()
     
     def onIndentClicked(self, button):
