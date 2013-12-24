@@ -117,7 +117,6 @@ class TextNote(Gtk.ScrolledWindow, Page):
         self.webview.execute_script("document.execCommand('underline', false, false);")
     
     def onEmbedClicked(self, button):
-        #TODO: Present popup asking about what to embed
         if self.embedDialog.run() == Gtk.ResponseType.OK:
             html = self.embedDialog.getHtml()
             self.webview.execute_script("document.execCommand('insertHTML', false, '%s');" % (html,))

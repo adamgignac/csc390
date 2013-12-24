@@ -11,11 +11,13 @@ class WikiContextPane(Gtk.HBox, EmbedContextPane):
     def __init__(self):
         super(WikiContextPane, self).__init__()
         self.add(Gtk.Label("Subject: "))
-        self.add(Gtk.Entry())
+        self.entry = Gtk.Entry()
+        self.add(self.entry)
         self.show_all()
     
     def getURL(self):
-        return "http://en.wikipedia.org"
+        text = self.entry.get_text()
+        return "http://en.wikipedia.org/wiki/%s" % (text.replace(" ", "_"))
 
 def register():
     return ("Wikipedia", WikiContextPane())
