@@ -119,7 +119,8 @@ class TextNote(Gtk.ScrolledWindow, Page):
     def onEmbedClicked(self, button):
         #TODO: Present popup asking about what to embed
         if self.embedDialog.run() == Gtk.ResponseType.OK:
-            print self.embedDialog.getHtml()
+            html = self.embedDialog.getHtml()
+            self.webview.execute_script("document.execCommand('insertHTML', false, '%s');" % (html,))
         self.embedDialog.hide()
     
     def onIndentClicked(self, button):
