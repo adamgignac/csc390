@@ -135,7 +135,7 @@ class MainWindow():
         except NotImplementedError:
             pass
         except IOError:
-            print "Failed to save page"
+            print("Failed to save page")
         pageNumber = self.notebook.page_num(page)
         self.notebook.remove_page(pageNumber)
     
