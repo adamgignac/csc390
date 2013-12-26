@@ -8,7 +8,7 @@ from databasetable import DatabaseTable
 
 class NoteTable(DatabaseTable):
     '''
-    Manages the database table related to Courses
+    Manages the database table related to Notes
     '''
     columns = {
         "date":"TEXT",

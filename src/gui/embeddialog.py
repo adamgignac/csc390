@@ -67,6 +67,9 @@ class EmbedDialog(Gtk.Dialog):
         return loadedTypes
     
     def on_combobox_changed(self, comboBox):
+        '''
+        Called when a type is selected from the combo box.
+        '''
         #Update the context pane
         for item in self.contextPane.get_children():
             self.contextPane.remove(item)
@@ -74,6 +77,9 @@ class EmbedDialog(Gtk.Dialog):
         self.contextPane.add(pane)
     
     def getHtml(self):
+        '''
+        Returns the HTML that should be embedded in the page.
+        '''
         contextPane = self.contextPane.get_children()[0]
         return '<iframe src="%s"></iframe>' % (contextPane.getURL(),)
         

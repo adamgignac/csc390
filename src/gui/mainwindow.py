@@ -65,6 +65,9 @@ class MainWindow():
         self.builder.get_object("baseWindow").show_all()
 
     def displaySearchResults(self, term):
+        '''
+        Search for the given term and open a page displaying the results
+        '''
         resultsPage = SearchResult(term)
         label = TabLabel("Search Results: " + term)
         label.connect('close-clicked', self.onTabClosed, resultsPage)
@@ -150,6 +153,12 @@ class MainWindow():
         aboutWindow.hide()
     
     def onTreeviewRowActivated(self, treeview, path, column):
+        '''
+        Called when a row in the sidebar is clicked.
+        If the row is a 'folder', expand it. Otherwise, open the
+        specified note.
+        '''
+        
         #Determine if the row is a course (top-level) or note (child)
         model = treeview.get_model()
         iter = model.get_iter(path)
@@ -163,6 +172,10 @@ class MainWindow():
             self.createNewPage(page, model.get_value(iter, 0))
     
     def onSearchBoxActivated(self, entry):
+        '''
+        Called when Enter is pressed in the search box.
+        Display the results.
+        '''
         self.displaySearchResults(entry.get_text())
 
 if __name__ == "__main__":

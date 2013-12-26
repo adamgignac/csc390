@@ -2,6 +2,9 @@
 Created on 2013-12-02
 
 @author: Adam Gignac
+
+Contains paths and other constants that need to be accessed
+from multiple places in the application.
 '''
 import os
 

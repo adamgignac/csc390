@@ -9,7 +9,7 @@ import os, imp, sys
 
 class Test(unittest.TestCase):
 
-    def testName(self):
+    def testRegisteringEmbedTypes(self):
         #Search embed module for embed types
         pluginpath = imp.find_module("embed")[1]
         ignore = ('test', 'init')
