@@ -176,7 +176,7 @@
             <property name="can_focus">False</property>
             <child>
               <object class="GtkToolbar" id="mainToolbar">
-                <property name="width_request">120</property>
+                <property name="width_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
@@ -224,17 +224,16 @@
             <child>
               <object class="GtkEntry" id="searchBox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="buffer">searchBuffer</property>
+                <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
                 <property name="primary_icon_stock">gtk-find</property>
                 <property name="placeholder_text">Search...</property>
+                <signal name="activate" handler="on_searchBox_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="padding">5</property>
-                <property name="pack_type">end</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -417,5 +416,4 @@
       <action-widget response="-5">button1</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkEntryBuffer" id="searchBuffer"/>
 </interface>

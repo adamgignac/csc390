@@ -42,6 +42,7 @@ class MainWindow():
             'on_newMenu_clicked':self.onNewClicked,
             'on_notebook_switch_page':self.onTabChanged,
             'on_treeview_row_activated':self.onTreeviewRowActivated,
+            'on_searchBox_activate':self.onSearchBoxActivated,
         }
         self.builder.connect_signals(signalHandlers)
         
@@ -60,7 +61,6 @@ class MainWindow():
         #Temporary
         testNote = TextNote()
         self.createNewPage(testNote)
-        self.displaySearchResults("changes")
 
         self.builder.get_object("baseWindow").show_all()
 
@@ -68,7 +68,8 @@ class MainWindow():
         resultsPage = SearchResult(term)
         label = TabLabel("Search Results: " + term)
         label.connect('close-clicked', self.onTabClosed, resultsPage)
-        self.notebook.append_page(resultsPage, label)
+        num= self.notebook.append_page(resultsPage, label)
+        self.notebook.set_current_page(num)
     
     def createNewPage(self, pageContent, labelString="New page"):
         '''
@@ -160,6 +161,9 @@ class MainWindow():
             #Open the note in a new tab
             page = TextNote(model.get_value(iter, 1))
             self.createNewPage(page, model.get_value(iter, 0))
+    
+    def onSearchBoxActivated(self, entry):
+        self.displaySearchResults(entry.get_text())
 
 if __name__ == "__main__":
     w = MainWindow()
