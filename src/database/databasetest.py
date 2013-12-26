@@ -10,6 +10,7 @@ from coursetable import CourseTable
 from notetable import NoteTable
 
 class BadlyMadeSubclass(DatabaseTable):
+    '''This will throw an exception because it is improperly named'''
     columns = {'dummy':'TEXT'}
 
 
