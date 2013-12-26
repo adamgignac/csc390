@@ -60,7 +60,7 @@ class MainWindow():
         #Temporary
         testNote = TextNote()
         self.createNewPage(testNote)
-        self.displaySearchResults("process")
+        self.displaySearchResults("changes")
 
         self.builder.get_object("baseWindow").show_all()
 
@@ -76,7 +76,7 @@ class MainWindow():
         label and close button on the tab.
         '''
         label = TabLabel(labelString)
-        pageContent.setFilename(labelString)
+        pageContent.setFilename(labelString + ".html")
         num = self.notebook.append_page(pageContent, label)
         label.connect('close-clicked', self.onTabClosed, pageContent)
         self.notebook.set_current_page(num)

@@ -5,6 +5,7 @@ Created on 2013-11-20
 '''
 from page import Page
 from tools.searchengine import SearchEngine
+from tools import constants
 
 from gi.repository import Gtk, WebKit
 import os
@@ -13,9 +14,6 @@ class SearchResult(Gtk.ScrolledWindow, Page):
     '''
     Displays the results of a search
     '''
-
-    #TODO: Change this path (hardcoded now for testing)
-    NOTES_DIRECTORY = os.path.expanduser("~/Documents/")
     
     HTML = """
     <html>
@@ -46,7 +44,7 @@ class SearchResult(Gtk.ScrolledWindow, Page):
         self.engine = SearchEngine()
         
         resultsHTML = []
-        for result in self.engine.findPattern(type(self).NOTES_DIRECTORY, searchTerm):
+        for result in self.engine.findPattern(constants.NOTES_DIR, searchTerm):
             resultContext = "\n".join([line for line in result[1]])
             resultsHTML.append(type(self).RESULT_BLOCK % (result[0], resultContext))
         
