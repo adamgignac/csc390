@@ -6,3 +6,7 @@
 ###########################
 .project
 .pydevproject
+
+# Gedit cache files #
+#####################
+*~

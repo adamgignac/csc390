@@ -35,7 +35,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
             targetFile = os.path.join(os.path.dirname(__file__), "TextNoteTemplate.html")
             self.filename = targetFile
         else:
-            targetFile = filename
+            targetFile = os.path.join(constants.NOTES_DIR, filename)
         with open(targetFile, 'r') as f:
             try:
                 content = "\n".join(f.readlines())

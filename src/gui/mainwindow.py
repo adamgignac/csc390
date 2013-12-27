@@ -119,7 +119,9 @@ class MainWindow():
         if dialog.run() == Gtk.ResponseType.OK:
             page = TextNote()
             course = self.builder.get_object("newNote_courseSelector").get_active_text()
-            self.createNewPage(page, course + ": " + self._getCurrentDate())
+            date = self._getCurrentDate()
+            self.createNewPage(page, course + ": " + date)
+            self.notesStore.insert(date=date, course=course, path=page.getFilename())
             self.builder.get_object('baseWindow').show_all()
             #Add to treeview
         dialog.hide()

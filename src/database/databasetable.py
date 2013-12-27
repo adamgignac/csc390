@@ -21,6 +21,8 @@ class DatabaseTable(object):
         connection = SQLite connection object
         '''
         
+        self.connection = connection
+        
         #This is not quite clever, it depends on naming convention
         if not self.__class__.__name__.endswith("Table"):
             raise Exception("Name of child class must be of the form [tablename]Table")
@@ -53,6 +55,7 @@ class DatabaseTable(object):
             ", ".join(columnValues) 
             )
         self.cursor.execute(query)
+        self.connection.commit()
         
     
     def listAll(self):
