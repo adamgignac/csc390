@@ -22,6 +22,7 @@ class DatabaseTable(object):
         '''
         
         self.connection = connection
+        self.connection.row_factory = sqlite3.Row
         
         #This is not quite clever, it depends on naming convention
         if not self.__class__.__name__.endswith("Table"):
@@ -48,8 +49,8 @@ class DatabaseTable(object):
         for key in kwargs.keys():
             if key not in type(self).columns.keys():
                 raise Exception("Improper column specified")
-            columnNames.append('"' + key + '"')
-            columnValues.append('"' + kwargs[key] + '"')
+            columnNames.append('"' + str(key) + '"')
+            columnValues.append('"' + str(kwargs[key]) + '"')
         query = """INSERT INTO %s (%s) VALUES (%s)""" % (self.tableName,
             ", ".join(columnNames),
             ", ".join(columnValues) 
@@ -59,7 +60,13 @@ class DatabaseTable(object):
         
     
     def listAll(self):
-        query = """SELECT * FROM %s""" % (self.tableName)
+        query = """SELECT * FROM %s""" % (self.tableName,)
         self.cursor.execute(query)
-        return self.cursor.fetchall()
+        results = []
+        for r in self.cursor.fetchall():
+            resultRow = {}
+            for key in r.keys():
+                resultRow[key] = r[key]
+            results.append(resultRow)
+        return results
         

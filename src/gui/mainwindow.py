@@ -4,6 +4,8 @@ Created on 2013-10-04
 @author: Adam Gignac
 '''
 
+#TODO: Allow notes to be deleted
+
 from gi.repository import Gtk
 from pages.textnote import TextNote #TODO: Import all into a list
 from pages.searchresult import SearchResult
@@ -43,6 +45,7 @@ class MainWindow():
             'on_notebook_switch_page':self.onTabChanged,
             'on_treeview_row_activated':self.onTreeviewRowActivated,
             'on_searchBox_activate':self.onSearchBoxActivated,
+            'on_menu_course_add_activate':self.onMenuCourseAdd,
         }
         self.builder.connect_signals(signalHandlers)
         
@@ -51,14 +54,15 @@ class MainWindow():
         #Populate the treeview
         treeviewModel = self.builder.get_object("courseListModel")
         self.courses = self.coursesStore.listAll()
-        for code, title in self.courses: #course = (code, title)
-            self.builder.get_object("newNote_courseSelector").append_text(code)
-            iter = treeviewModel.append(None, ("%s (%s)" % (code, title), None))
-            notesForCourse = self.notesStore.listAllForCourse(code)
-            for date, course, path in notesForCourse:
-                treeviewModel.append(iter, (code + ": " + date, path))
+        print self.courses
+        for course in self.courses:
+            self.builder.get_object("newNote_courseSelector").append_text(course['code'])
+            iter = treeviewModel.append(None, ("%s (%s)" % (course['code'], course['name']), None))
+            notesForCourse = self.notesStore.listAllForCourse(course['code'])
+            for note in notesForCourse:
+                treeviewModel.append(iter, (course['code'] + ": " + note['date'], note['path']))
         
-        #Temporary
+        #TODO: If currently in class and note exists for today, open it
         testNote = TextNote()
         self.createNewPage(testNote)
 
@@ -123,7 +127,7 @@ class MainWindow():
             self.createNewPage(page, course + ": " + date)
             self.notesStore.insert(date=date, course=course, path=page.getFilename())
             self.builder.get_object('baseWindow').show_all()
-            #Add to treeview
+            #TODO: Add note to treeview
         dialog.hide()
     
     def _getCurrentDate(self):
@@ -135,7 +139,6 @@ class MainWindow():
         '''
         Called when a tab is closed. Save the contents of the tab.
         '''
-        #TODO: (Ask to)? save the contents of the tab
         try:
             page.saveContents()
         except NotImplementedError:
@@ -179,6 +182,30 @@ class MainWindow():
         Display the results.
         '''
         self.displaySearchResults(entry.get_text())
+    
+    def onMenuCourseAdd(self, menuItem):
+        '''
+        Called when the Course > Add menu item is clicked
+        '''
+        dialog = self.builder.get_object("newCourseDialog")
+        if dialog.run() == Gtk.ResponseType.OK:
+            courseTitle = self.builder.get_object("newCourse_title").get_text()
+            courseCode = self.builder.get_object("newCourse_code").get_text()
+            courseStartHours = self.builder.get_object("newCourse_startHours").get_value()
+            courseStartMinutes = self.builder.get_object("newCourse_startMinutes").get_value()
+            courseEndHours = self.builder.get_object("newCourse_endHours").get_value()
+            courseEndMinutes = self.builder.get_object("newCourse_endMinutes").get_value()
+            print "%s (%s) from %d:%d to %d:%d" % (courseTitle, courseCode, courseStartHours, courseStartMinutes, courseEndHours, courseEndMinutes)
+            dayKeys = {'monday':1, 'tuesday':2, 'wednesday':4, 'thursday':8, 'friday':16} #UNIX permissions-style
+            days = 0
+            for d in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
+                if self.builder.get_object(d).get_active():
+                    days += dayKeys[d]
+            self.coursesStore.insert(name=courseTitle, code=courseCode, days=days,
+                                      startTime="%d:%d" % (courseStartHours, courseStartMinutes),
+                                      endTime="%d:%d" % (courseEndHours, courseEndMinutes))
+            #TODO: Add course to treeview
+        dialog.hide()
 
 if __name__ == "__main__":
     w = MainWindow()

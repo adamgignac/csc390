@@ -3,9 +3,8 @@ TODO
 
 Short-term
 ----------
-- When creating a new page, it needs to show up in the sidebar
-- Add icons for lists and embed
 - Delete notes
+- Handle multiple entries for one day/course
 
 Long-term
 ---------

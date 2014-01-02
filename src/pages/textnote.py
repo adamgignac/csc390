@@ -88,6 +88,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
         indent.connect('clicked', self.onIndentClicked)
         unindent = Gtk.ToolButton(Gtk.STOCK_UNINDENT)
         unindent.connect('clicked', self.onUnindentClicked)
+        #TODO: Add icons for lists
         unorderedList = Gtk.ToolButton()
         unorderedList.connect('clicked', self.onUnorderedListClicked)
         orderedList = Gtk.ToolButton()

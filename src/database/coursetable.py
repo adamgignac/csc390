@@ -13,7 +13,11 @@ class CourseTable(DatabaseTable):
     columns = {
         "name":"TEXT",
         "code":"TEXT",
+        "days":"INTEGER",
+        "startTime":"TEXT",
+        "endTime":"TEXT",
     }
+    #TODO: Store start and end times as well as days
 
 if __name__ == "__main__":
     import sqlite3
