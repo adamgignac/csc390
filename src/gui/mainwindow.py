@@ -205,6 +205,9 @@ class MainWindow():
                                       startTime="%d:%d" % (courseStartHours, courseStartMinutes),
                                       endTime="%d:%d" % (courseEndHours, courseEndMinutes))
             #TODO: Add course to treeview
+            model = self.builder.get_object('courseListModel')
+            model.append(None, ["%s (%s)" % (courseCode, courseTitle), None])
+            
         dialog.hide()
 
 if __name__ == "__main__":
