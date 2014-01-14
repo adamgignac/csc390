@@ -77,6 +77,8 @@ Development
 - Eclipse with PyDev
 - Git
 - Python
+- Gtk 3.0
+- Sqlite
 
 Deployment
 ----------
@@ -98,7 +100,7 @@ As a student, I want to:
 - install the application on an Ubuntu system (and potentially a Windows/Mac system)
 - search my notes
 
-Database Schema
+Sqlite Database Schema
 ===============
 
 Table 'course':
