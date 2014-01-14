@@ -12,5 +12,5 @@ class EmbedContextPane(object):
     item being embedded.
     '''
     
-    def getURL(self):
+    def getHtml(self):
         raise NotImplementedError

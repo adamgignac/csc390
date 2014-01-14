@@ -54,7 +54,6 @@ class MainWindow():
         #Populate the treeview
         treeviewModel = self.builder.get_object("courseListModel")
         self.courses = self.coursesStore.listAll()
-        print self.courses
         for course in self.courses:
             self.builder.get_object("newNote_courseSelector").append_text(course['code'])
             iter = treeviewModel.append(None, ("%s (%s)" % (course['code'], course['name']), None))
@@ -195,7 +194,7 @@ class MainWindow():
             courseStartMinutes = self.builder.get_object("newCourse_startMinutes").get_value()
             courseEndHours = self.builder.get_object("newCourse_endHours").get_value()
             courseEndMinutes = self.builder.get_object("newCourse_endMinutes").get_value()
-            print "%s (%s) from %d:%d to %d:%d" % (courseTitle, courseCode, courseStartHours, courseStartMinutes, courseEndHours, courseEndMinutes)
+            #print "%s (%s) from %d:%d to %d:%d" % (courseTitle, courseCode, courseStartHours, courseStartMinutes, courseEndHours, courseEndMinutes)
             dayKeys = {'monday':1, 'tuesday':2, 'wednesday':4, 'thursday':8, 'friday':16} #UNIX permissions-style
             days = 0
             for d in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
@@ -204,7 +203,6 @@ class MainWindow():
             self.coursesStore.insert(name=courseTitle, code=courseCode, days=days,
                                       startTime="%d:%d" % (courseStartHours, courseStartMinutes),
                                       endTime="%d:%d" % (courseEndHours, courseEndMinutes))
-            #TODO: Add course to treeview
             model = self.builder.get_object('courseListModel')
             model.append(None, ["%s (%s)" % (courseCode, courseTitle), None])
             

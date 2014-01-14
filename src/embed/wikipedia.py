@@ -15,9 +15,10 @@ class WikiContextPane(Gtk.HBox, EmbedContextPane):
         self.add(self.entry)
         self.show_all()
     
-    def getURL(self):
+    def getHtml(self):
         text = self.entry.get_text()
-        return "http://en.wikipedia.org/wiki/%s" % (text.replace(" ", "_"))
+        url =  "http://en.wikipedia.org/wiki/%s" % (text.replace(" ", "_"))
+        return '<iframe src="%s"></iframe>' % (url,)
 
 def register():
     return ("Wikipedia", WikiContextPane())

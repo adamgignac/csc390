@@ -53,16 +53,18 @@ class EmbedDialog(Gtk.Dialog):
         for fname in pluginfiles:
             try:
                 importedTypes.append(__import__(fname))
-            except ImportError:
-                pass
+            except ImportError, e:
+                if __debug__:
+                    print e
         
         loadedTypes = {}
         for embedType in importedTypes:
             try:
                 k, v = embedType.register()
                 loadedTypes[k] = v
-            except AttributeError:
-                pass
+            except AttributeError, e:
+                if __debug__:
+                    print e
             
         return loadedTypes
     
@@ -81,5 +83,4 @@ class EmbedDialog(Gtk.Dialog):
         Returns the HTML that should be embedded in the page.
         '''
         contextPane = self.contextPane.get_children()[0]
-        return '<iframe src="%s"></iframe>' % (contextPane.getURL(),)
-        
+        return contextPane.getHtml()

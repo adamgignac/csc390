@@ -6,6 +6,7 @@ Created on 2013-10-19
 from gi.repository import Gtk, WebKit
 
 import os
+import json
 from BeautifulSoup import BeautifulSoup
 
 from page import Page
@@ -119,8 +120,11 @@ class TextNote(Gtk.ScrolledWindow, Page):
     
     def onEmbedClicked(self, button):
         if self.embedDialog.run() == Gtk.ResponseType.OK:
-            html = self.embedDialog.getHtml()
-            self.webview.execute_script("document.execCommand('insertHTML', false, '%s');" % (html,))
+            html = json.dumps(self.embedDialog.getHtml())
+            command = """document.execCommand('insertHTML', false, %s);""" % (html,)
+            if __debug__:
+                print command
+            self.webview.execute_script(command)
         self.embedDialog.hide()
     
     def onIndentClicked(self, button):

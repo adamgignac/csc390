@@ -15,8 +15,8 @@ class WebsiteContextPane(Gtk.HBox, EmbedContextPane):
         self.add(self.entry)
         self.show_all()
     
-    def getURL(self):
-        return self.entry.get_text()
+    def getHtml(self):
+        return '<iframe src="%s"></iframe>' % (self.entry.get_text(),)
 
 def register():
     return ("Website", WebsiteContextPane())
