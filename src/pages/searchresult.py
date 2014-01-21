@@ -46,7 +46,8 @@ class SearchResult(Gtk.ScrolledWindow, Page):
         resultsHTML = []
         for result in self.engine.findPattern(constants.NOTES_DIR, searchTerm):
             resultContext = "\n".join([line for line in result[1]])
-            resultsHTML.append(type(self).RESULT_BLOCK % (result[0], resultContext))
+            filename = result[0].split(os.path.sep)[-1].replace(".html", "")
+            resultsHTML.append(type(self).RESULT_BLOCK % (filename, resultContext))
         
         content = type(self).HTML % ("\n".join(resultsHTML),)
         self.webview.load_html_string(content, "file://%s/" % constants.NOTES_DIR)
