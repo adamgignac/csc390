@@ -21,5 +21,4 @@ class Test(unittest.TestCase):
             mod.register()
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
