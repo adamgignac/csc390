@@ -18,7 +18,7 @@ class SearchResult(Gtk.ScrolledWindow, Page):
     HTML = """
     <html>
         <head>
-            <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+            <link rel="stylesheet" href="dist/css/bootstrap.css">
         </head>
         <body>
             %s
@@ -49,7 +49,7 @@ class SearchResult(Gtk.ScrolledWindow, Page):
             resultsHTML.append(type(self).RESULT_BLOCK % (result[0], resultContext))
         
         content = type(self).HTML % ("\n".join(resultsHTML),)
-        self.webview.load_html_string(content, "file:///")
+        self.webview.load_html_string(content, "file://%s/" % constants.NOTES_DIR)
         self.show_all()
     
     def getContextToolbarItems(self):

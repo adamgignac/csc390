@@ -44,7 +44,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
             except:
                 content = "Well, this is awkward..."
         
-        self.webview.load_html_string(saxutils.unescape(content), "file:///")
+        self.webview.load_html_string(saxutils.unescape(content), "file://%s/" % constants.NOTES_DIR)
         self.add(self.webview)
         self.webview.set_editable(True)
         self.settings = self.webview.get_settings()
