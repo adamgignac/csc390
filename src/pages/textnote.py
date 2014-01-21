@@ -8,6 +8,7 @@ from gi.repository import Gtk, WebKit
 import os
 import json
 from BeautifulSoup import BeautifulSoup
+from xml.sax import saxutils
 
 from page import Page
 from tools import constants
@@ -43,7 +44,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
             except:
                 content = "Well, this is awkward..."
         
-        self.webview.load_html_string(content, "file:///")
+        self.webview.load_html_string(saxutils.unescape(content), "file:///")
         self.add(self.webview)
         self.webview.set_editable(True)
         self.settings = self.webview.get_settings()
@@ -59,7 +60,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
             #Get HTML by packing it into the document title
             self.webview.execute_script("document.title=document.documentElement.innerHTML;")
             #Dump title to file
-            content = self.webview.get_main_frame().get_title()
+            content = self.webview.get_main_frame().get_title().replace("&gt;", ">") #Fix css selector not saving
             f.write(BeautifulSoup(content).prettify())
             
     
