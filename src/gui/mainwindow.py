@@ -62,8 +62,6 @@ class MainWindow():
                 treeviewModel.append(iter, (course['code'] + ": " + note['date'], note['path']))
         
         #TODO: If currently in class and note exists for today, open it
-        testNote = TextNote()
-        self.createNewPage(testNote)
 
         self.builder.get_object("baseWindow").show_all()
 
