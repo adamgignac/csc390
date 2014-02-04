@@ -8,6 +8,7 @@ Created on 2013-10-04
 
 from gi.repository import Gtk, GObject
 from pages.textnote import TextNote #TODO: Import all into a list
+from pages.tablenote import TableNote
 from pages.searchresult import SearchResult
 from gui.tablabel import TabLabel
 from database.coursetable import CourseTable
@@ -78,6 +79,8 @@ class MainWindow():
                 treeviewModel.append(newIter, (displayString, note['path']))
 
         self.builder.get_object("baseWindow").show_all()
+        
+        self.createNewPage(TableNote(), "table")
         
         #Hide the progress bar unless we're saving
         self.builder.get_object("autosaveProgress").set_visible(False)

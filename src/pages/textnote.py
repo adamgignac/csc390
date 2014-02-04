@@ -4,7 +4,6 @@ Created on 2013-10-19
 @author: Adam Gignac
 '''
 from gi.repository import Gtk, WebKit
-
 import os
 import json
 from BeautifulSoup import BeautifulSoup

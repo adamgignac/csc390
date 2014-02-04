@@ -35,6 +35,7 @@ class SearchEngine(object):
 
     def findPattern(self, pattern):
         '''
+        (Generator)
         Given a directory, recursively search through all files to find any
         occurences of the specified pattern.
         '''
