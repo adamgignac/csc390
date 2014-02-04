@@ -7,23 +7,38 @@ import os
 import fnmatch
 from BeautifulSoup import BeautifulSoup
 
+def fixLines(lines):
+    '''
+    Since we're just pulling a handful of lines out of a file, pass it
+    through BeautifulSoup to fix any unmatched tags that pop up.
+    '''
+    return [BeautifulSoup(line).prettify() for line in lines]
+
 class SearchEngine(object):
     '''
     Reimplementation of grep in Python, with context
     '''
     
-    def _findAllFilesInDirectory(self, directory, pattern):
+    def __init__(self, directory):
+        self.directory = directory
+    
+    def _findAllFilesInDirectory(self, namePattern):
+        '''
+        Given a directory, finds all files whose names match the specified
+        pattern.
+        '''
         matches = []
-        for root, dirnames, filenames in os.walk(directory):
-            for filename in fnmatch.filter(filenames, pattern):
+        for root, dirnames, filenames in os.walk(self.directory):
+            for filename in fnmatch.filter(filenames, namePattern):
                 matches.append(os.path.join(root, filename))
         return matches
-    
-    def _fixLines(self, lines):
-        return [BeautifulSoup(line).prettify() for line in lines]
 
-    def findPattern(self, directory, pattern):
-        savedNotes = self._findAllFilesInDirectory(directory, "*.html")
+    def findPattern(self, pattern):
+        '''
+        Given a directory, recursively search through all files to find any
+        occurences of the specified pattern.
+        '''
+        savedNotes = self._findAllFilesInDirectory("*.html")
         for note in savedNotes:
             with open(note, 'r') as target:
                 lines = target.readlines()

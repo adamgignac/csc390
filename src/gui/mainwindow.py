@@ -6,7 +6,7 @@ Created on 2013-10-04
 
 #TODO: Allow notes to be deleted
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 from pages.textnote import TextNote #TODO: Import all into a list
 from pages.searchresult import SearchResult
 from gui.tablabel import TabLabel
@@ -17,6 +17,17 @@ from tools import constants
 import datetime
 import os
 import sqlite3
+
+AUTOSAVE_TIME = 30
+
+
+def getCurrentDate():
+    '''
+    Returns the current date for use in a note title
+    '''
+    now = datetime.datetime.now()
+    dateString = "%d-%d-%d" % (now.year, now.month, now.day)
+    return dateString
 
 class MainWindow():
     '''
@@ -34,7 +45,9 @@ class MainWindow():
         self.notesStore = NoteTable(conn)
         
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(os.path.join(os.path.dirname(__file__), "isidore.glade"))
+        
+        _gladeFile = os.path.join(os.path.dirname(__file__), "isidore.glade")
+        self.builder.add_from_file(_gladeFile)
         
         #Connect some signals
         signalHandlers = {
@@ -55,15 +68,22 @@ class MainWindow():
         treeviewModel = self.builder.get_object("courseListModel")
         self.courses = self.coursesStore.listAll()
         for course in self.courses:
-            self.builder.get_object("newNote_courseSelector").append_text(course['code'])
-            iter = treeviewModel.append(None, ("%s (%s)" % (course['code'], course['name']), None))
+            courseSelector = self.builder.get_object("newNote_courseSelector")
+            courseSelector.append_text(course['code'])
+            newIter = treeviewModel.append(None, ("%s (%s)" % 
+                                        (course['code'], course['name']), None))
             notesForCourse = self.notesStore.listAllForCourse(course['code'])
             for note in notesForCourse:
-                treeviewModel.append(iter, (course['code'] + ": " + note['date'], note['path']))
-        
-        #TODO: If currently in class and note exists for today, open it
+                displayString = course['code'] + ": " + note['date']
+                treeviewModel.append(newIter, (displayString, note['path']))
 
         self.builder.get_object("baseWindow").show_all()
+        
+        #Hide the progress bar unless we're saving
+        self.builder.get_object("autosaveProgress").set_visible(False)
+        
+        #Add autosave timeout
+        GObject.timeout_add_seconds(AUTOSAVE_TIME, self._saveAllWithProgressBar)
 
     def displaySearchResults(self, term):
         '''
@@ -72,7 +92,7 @@ class MainWindow():
         resultsPage = SearchResult(term)
         label = TabLabel("Search Results: " + term)
         label.connect('close-clicked', self.onTabClosed, resultsPage)
-        num= self.notebook.append_page(resultsPage, label)
+        num = self.notebook.append_page(resultsPage, label)
         self.notebook.set_current_page(num)
     
     def createNewPage(self, pageContent, labelString="New page"):
@@ -95,6 +115,22 @@ class MainWindow():
         for page in self.notebook.get_children():
             page.saveContents()
         Gtk.main_quit()
+    
+    def _saveAllWithProgressBar(self, *args):
+        '''
+        Called automatically every few minutes to save the notes.
+        '''
+        #Note: the progress bar doesn't appear to be showing
+        print "Autosave...",
+        progressBar = self.builder.get_object('autosaveProgress')
+        numPages = len(self.notebook.get_children())
+        progressBar.set_visible(True)
+        for count, page in enumerate(self.notebook.get_children()):
+            progressBar.set_fraction((count * 100.0) / numPages)
+            page.saveContents()
+        progressBar.set_visible(False)
+        print "Done"
+        return True
     
     def onTabChanged(self, notebook, page, page_num):
         '''
@@ -119,18 +155,16 @@ class MainWindow():
         dialog = self.builder.get_object("newNoteDialog")
         if dialog.run() == Gtk.ResponseType.OK:
             page = TextNote()
-            course = self.builder.get_object("newNote_courseSelector").get_active_text()
-            date = self._getCurrentDate()
+            courseSelector = self.builder.get_object("newNote_courseSelector")
+            course = courseSelector.get_active_text()
+            date = getCurrentDate()
             self.createNewPage(page, course + ": " + date)
-            self.notesStore.insert(date=date, course=course, path=page.getFilename())
+            self.notesStore.insert(date=date, course=course, 
+                                   path=page.getFilename()
+                                   )
             self.builder.get_object('baseWindow').show_all()
             #TODO: Add note to treeview
         dialog.hide()
-    
-    def _getCurrentDate(self):
-        now = datetime.datetime.now()
-        dateString = "%d-%d-%d" % (now.year, now.month, now.day)
-        return dateString
     
     def onTabClosed(self, button, page=None):
         '''
@@ -163,15 +197,15 @@ class MainWindow():
         
         #Determine if the row is a course (top-level) or note (child)
         model = treeview.get_model()
-        iter = model.get_iter(path)
+        selectedIter = model.get_iter(path)
         if path.get_depth() == 1:
             #This is a course/folder
             #Open the folder
             treeview.expand_row(path, True)
         else:
             #Open the note in a new tab
-            page = TextNote(model.get_value(iter, 1))
-            self.createNewPage(page, model.get_value(iter, 0))
+            page = TextNote(model.get_value(selectedIter, 1))
+            self.createNewPage(page, model.get_value(selectedIter, 0))
     
     def onSearchBoxActivated(self, entry):
         '''
@@ -186,26 +220,31 @@ class MainWindow():
         '''
         dialog = self.builder.get_object("newCourseDialog")
         if dialog.run() == Gtk.ResponseType.OK:
-            courseTitle = self.builder.get_object("newCourse_title").get_text()
-            courseCode = self.builder.get_object("newCourse_code").get_text()
-            courseStartHours = self.builder.get_object("newCourse_startHours").get_value()
-            courseStartMinutes = self.builder.get_object("newCourse_startMinutes").get_value()
-            courseEndHours = self.builder.get_object("newCourse_endHours").get_value()
-            courseEndMinutes = self.builder.get_object("newCourse_endMinutes").get_value()
-            #print "%s (%s) from %d:%d to %d:%d" % (courseTitle, courseCode, courseStartHours, courseStartMinutes, courseEndHours, courseEndMinutes)
-            dayKeys = {'monday':1, 'tuesday':2, 'wednesday':4, 'thursday':8, 'friday':16} #UNIX permissions-style
+            widget = self.builder.get_object("newCourse_title")
+            courseTitle = widget.get_text()
+            widget = self.builder.get_object("newCourse_code")
+            courseCode = widget.get_text()
+            self.builder.get_object("newCourse_startHours")
+            courseStartHours = widget.get_value()
+            widget = self.builder.get_object("newCourse_startMinutes")
+            courseStartMinutes = widget.get_value()
+            widget = self.builder.get_object("newCourse_endHours")
+            courseEndHours = widget.get_value()
+            widget = self.builder.get_object("newCourse_endMinutes")
+            courseEndMinutes = widget.get_value()
+            dayKeys = {'monday':1, 
+                       'tuesday':2,
+                       'wednesday':4, 
+                       'thursday':8, 
+                       'friday':16} #UNIX permissions-style
             days = 0
-            for d in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
-                if self.builder.get_object(d).get_active():
-                    days += dayKeys[d]
+            for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
+                if self.builder.get_object(day).get_active():
+                    days += dayKeys[day]
             self.coursesStore.insert(name=courseTitle, code=courseCode, days=days,
-                                      startTime="%d:%d" % (courseStartHours, courseStartMinutes),
-                                      endTime="%d:%d" % (courseEndHours, courseEndMinutes))
+                                     startTime="%d:%d" % (courseStartHours, courseStartMinutes),
+                                     endTime="%d:%d" % (courseEndHours, courseEndMinutes))
             model = self.builder.get_object('courseListModel')
             model.append(None, ["%s (%s)" % (courseCode, courseTitle), None])
             
         dialog.hide()
-
-if __name__ == "__main__":
-    w = MainWindow()
-    Gtk.main()

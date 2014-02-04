@@ -6,7 +6,7 @@ Created on 2013-10-04
 
 class Page(object):
     '''
-    Interface for note types
+    Interface for page types
     '''
 
 
@@ -27,7 +27,7 @@ class Page(object):
         '''
         Returns a list of toolbar items that are specific to the note
         type (i.e. text formatting for text notes, drawing tools for
-        a diagram, etc)
+        a diagram, etc) 
         This should be of the form: [(icon, callback), ...]
         '''
         raise NotImplementedError()

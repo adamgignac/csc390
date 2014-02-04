@@ -57,4 +57,8 @@ class TabLabel(Gtk.Box):
         self.show_all()
     
     def button_clicked(self, button, data=None):
+        '''
+        Called when the close button is clicked. All this does is
+        signal the parent that the tab wants to be closed.
+        '''
         self.emit("close-clicked")
