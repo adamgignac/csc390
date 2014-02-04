@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"/>
+
+    <!-- Javascript from http://viralpatel.net/blogs/dynamically-add-remove-rows-in-html-table-using-javascript/ -->
+    <script type="text/javascript">
+    function addRow(){
+        var table = document.getElementById('main-table');
+        var rowCount = table.rows.length;
+        var colCount = table.rows[0].cells.length;
+        var row = table.insertRow(rowCount);
+        for (var i = 0; i < colCount; i++){
+            row.insertCell()
+        }
+    }
+
+    function removeRow(o){
+        var p = o.parentNode.parentNode;
+        p.parentNode.removeChild(p);
+    }
+
+    function addColumn(){
+        var table = document.getElementById('main-table');
+        var colCount = table.rows[0].cells.length;
+        var rowCount = table.rows.length;
+        table.rows[0].appendChild(document.createElement('th'));
+        for (var i = 1; i < rowCount; i++){
+            table.rows[i].insertCell(colCount);
+        }
+    }
+    </script>
+
+</head>
+<body contenteditable="true">
+    <button onclick="addRow()">Add Row</button>
+    <button onclick="addColumn()">Add Column</button>
+    <table class="table table-bordered" id="main-table">
+        <tr>
+            <th>
+                Header 1
+            </th>
+            <th>
+                Header 2
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Cell 1
+            </td>
+            <td>
+                Cell 2
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Cell 3
+            </td>
+            <td>
+                Cell 4
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
