@@ -31,8 +31,8 @@ class Test(unittest.TestCase):
     
     def testNotes(self):
         table = NoteTable(DUMMY_DATABASE)
+        table.insert(path="/path/to/file", course="CSC390")
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testAbstract']
     unittest.main()
