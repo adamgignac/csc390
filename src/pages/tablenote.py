@@ -36,8 +36,9 @@ class TableNote(Gtk.ScrolledWindow, Page):
             except IOError:
                 content = "Well, this is awkward..."
         
-        self.webview.load_html_string(saxutils.unescape(content), 
+        self.webview.load_html_string(saxutils.unescape(content),
                                       "file://%s/" % constants.NOTES_DIR)
+        self.webview.set_editable(True)
         self.add(self.webview)
         self.show_all()
 
@@ -54,7 +55,21 @@ class TableNote(Gtk.ScrolledWindow, Page):
         return self.filename
         
     def getContextToolbarItems(self):
-        return []
+        addRowButton = Gtk.ToolButton(Gtk.STOCK_ADD)
+        addRowButton.set_label("Add row")
+        addRowButton.set_is_important(True)
+        addRowButton.connect('clicked', self._insertRow)
+        addColButton = Gtk.ToolButton(Gtk.STOCK_ADD)
+        addColButton.set_label("Add column")
+        addColButton.set_is_important(True)
+        addColButton.connect('clicked', self._insertCol)
+        return [addRowButton, addColButton]
+    
+    def _insertRow(self, *args):
+        self.webview.execute_script("addRow()")
+        
+    def _insertCol(self, *args):
+        self.webview.execute_script("addColumn()")
     
     def saveContents(self):
         pass

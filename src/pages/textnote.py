@@ -21,9 +21,9 @@ COMMANDS = {
 'outdent':"document.execCommand('outdent', false, false);",
 'unorderedList':"document.execCommand('insertUnorderedList', false, false);",
 'orderedList':"document.execCommand('insertOrderedList', false, false);",
-'leftJustify':"document.execCommand('justifyleft', false, false);",
-'centerJustify':"document.execCommand('justifycenter', false, false);",
-'rightJustify':"document.execCommand('justifyright', false, false);",
+'justifyLeft':"document.execCommand('justifyleft', false, false);",
+'justifyCenter':"document.execCommand('justifycenter', false, false);",
+'justifyRight':"document.execCommand('justifyright', false, false);",
 'undo':"document.execCommand('undo');",
 'redo':"document.execCommand('redo');"
 }
