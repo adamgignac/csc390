@@ -47,8 +47,8 @@ class SearchEngine(object):
                 if numLines > 3:
                     for i in range(3):
                         if pattern.lower() in lines[i].lower(): #Case-insensitive
-                            yield ("%s: %d" % (note, i), self._fixLines(lines[0:5]))
+                            yield ("%s: %d" % (note, i), fixLines(lines[0:5]))
                     for i in range(3, numLines - 2):
                         if pattern.lower() in lines[i+2].lower():
-                            yield ("%s: %d" % (note, i), self._fixLines(lines[i:i+5]))
+                            yield ("%s: %d" % (note, i), fixLines(lines[i:i+5]))
 

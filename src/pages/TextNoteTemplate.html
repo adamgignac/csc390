@@ -14,7 +14,25 @@
     		width:80%;
     		height:300px;
     	}
+
+        .collapsible {
+            border: 1px solid grey;
+            border-radius: 10px;
+        }
+
+        .collapse:hover{
+            background-color: grey;
+        }
     </style>
+    <script type="text/javascript">
+        function toggleDiv(d){
+            if (d.clientHeight > 100) {
+                d.children[1].style.display = 'none';
+            } else {
+                d.children[1].style.display = 'block';
+            }
+        }
+    </script>
 </head>
 <body>
 	<p>Isidore</p>
