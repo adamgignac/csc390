@@ -1,6 +1,7 @@
 # Compiled Python files #
 #########################
 *.pyc
+*.pyo
 
 # Eclipse-generated files #
 ###########################
