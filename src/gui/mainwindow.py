@@ -124,7 +124,8 @@ class MainWindow():
         Called automatically every few minutes to save the notes.
         '''
         #Note: the progress bar doesn't appear to be showing
-        print "Autosave...",
+        if __debug__:
+            print "Autosave...",
         progressBar = self.builder.get_object('autosaveProgress')
         numPages = len(self.notebook.get_children())
         progressBar.set_visible(True)
@@ -132,7 +133,8 @@ class MainWindow():
             progressBar.set_fraction((count * 100.0) / numPages)
             page.saveContents()
         progressBar.set_visible(False)
-        print "Done"
+        if __debug__:
+            print "Done"
         return True
     
     def onTabChanged(self, notebook, page, page_num):
