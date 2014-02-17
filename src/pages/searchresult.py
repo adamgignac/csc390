@@ -57,7 +57,3 @@ class SearchResult(Gtk.ScrolledWindow, Page):
         label = Gtk.ToolItem()
         label.add(Gtk.Label("Search for: %s" % (self.searchTerm,)))
         return [label]
-    
-    def saveContents(self):
-        """There is no need to save search results"""
-        pass

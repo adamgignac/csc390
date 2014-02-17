@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkAboutDialog" id="aboutDialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -188,9 +189,6 @@
                 <property name="width_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <style>
-                  <class name="primary-toolbar"/>
-                </style>
                 <child>
                   <object class="GtkMenuToolButton" id="newMenu">
                     <property name="visible">True</property>
@@ -203,6 +201,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="homogeneous">False</property>
                   </packing>
                 </child>
                 <child>
@@ -215,6 +214,9 @@
                     <property name="homogeneous">True</property>
                   </packing>
                 </child>
+                <style>
+                  <class name="primary-toolbar"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -240,9 +242,6 @@
               <object class="GtkToolbar" id="searchToolbar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <style>
-                  <class name="primary-toolbar"/>
-                </style>
                 <child>
                   <object class="GtkToolItem" id="searchBoxHolder">
                     <property name="visible">True</property>
@@ -254,7 +253,6 @@
                         <property name="can_focus">True</property>
                         <property name="invisible_char">•</property>
                         <property name="width_chars">25</property>
-                        <property name="invisible_char_set">True</property>
                         <property name="primary_icon_stock">gtk-find</property>
                         <property name="placeholder_text">Search...</property>
                         <signal name="activate" handler="on_searchBox_activate" swapped="no"/>
@@ -263,8 +261,12 @@
                   </object>
                   <packing>
                     <property name="expand">True</property>
+                    <property name="homogeneous">False</property>
                   </packing>
                 </child>
+                <style>
+                  <class name="primary-toolbar"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -331,6 +333,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_open_calendar_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -844,8 +847,6 @@
               <object class="GtkComboBoxText" id="newNote_courseSelector">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="entry_text_column">0</property>
-                <property name="id_column">1</property>
               </object>
             </child>
             <child type="label">

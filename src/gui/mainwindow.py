@@ -10,6 +10,7 @@ from gi.repository import Gtk, GObject
 from pages.textnote import TextNote #TODO: Import all into a list
 from pages.tablenote import TableNote
 from pages.searchresult import SearchResult
+from pages.calendar import Calendar
 from gui.tablabel import TabLabel
 from database.coursetable import CourseTable
 from database.notetable import NoteTable
@@ -60,6 +61,7 @@ class MainWindow():
             'on_treeview_row_activated':self.onTreeviewRowActivated,
             'on_searchBox_activate':self.onSearchBoxActivated,
             'on_menu_course_add_activate':self.onMenuCourseAdd,
+            'on_open_calendar_clicked':self.onOpenCalendarClicked,
         }
         self.builder.connect_signals(signalHandlers)
         
@@ -80,7 +82,7 @@ class MainWindow():
 
         self.builder.get_object("baseWindow").show_all()
         
-        self.createNewPage(TableNote(), "table")
+        self.createNewPage(Calendar(self.coursesStore), "Calendar")
         
         #Hide the progress bar unless we're saving
         self.builder.get_object("autosaveProgress").set_visible(False)
@@ -183,6 +185,9 @@ class MainWindow():
             print("Failed to save page")
         pageNumber = self.notebook.page_num(page)
         self.notebook.remove_page(pageNumber)
+        
+    def onOpenCalendarClicked(self, button):
+        self.createNewPage(Calendar(self.coursesStore), "Calendar")
     
     def onMenuAboutClicked(self, menuItem):
         '''

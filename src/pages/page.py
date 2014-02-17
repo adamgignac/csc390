@@ -21,6 +21,12 @@ class Page(object):
         '''
         Extracts the contents of the page and writes them to a file.
         '''
+        pass
+    
+    def setFilename(self, filename):
+        pass
+    
+    def getFilename(self):
         raise NotImplementedError()
     
     def getContextToolbarItems(self):
