@@ -13,6 +13,10 @@ def _timeAsDecimal(time):
     t = time.split(":")
     return float(t[0]) + float(t[1])/60
 
+NUM_HOURS = 14
+NUM_DAYS = 5
+START_HOUR = 8
+
 class Calendar(GooCanvas.Canvas, Page):
     '''
     Displays a calendar of student courses and allows modification of them
@@ -30,26 +34,31 @@ class Calendar(GooCanvas.Canvas, Page):
         self.courses = courseStore.listAll()
     
     def on_resize(self, widget, allocation):
-        self.draw(allocation.width, allocation.height)
+        self.width = allocation.width
+        self.height = allocation.height
+        self.hour_height = self.height/NUM_HOURS
+        self.draw()
     
-    def draw(self, width, height):
-        self.set_bounds(0, 0, width, height)
-        HOURS = 14
-        NUM_DAYS = 5
-        HOUR_HEIGHT = height/HOURS
+    def draw(self):
+        self.set_bounds(0, 0, self.width, self.height)
+        self._drawGrid()
+        for course in self.courses:
+            self._drawCourse(course)
+    
+    def _drawGrid(self):
         GooCanvas.CanvasRect(parent=self.root,
                              x=0,
                              y=0,
-                             width=width,
-                             height=height,
+                             width=self.width,
+                             height=self.height,
                              fill_color="white")
         GooCanvas.CanvasGrid(parent=self.root, #Major lines
                              x=0,
                              y=0,
-                             width=width,
-                             height=height,
-                             x_step=width/NUM_DAYS,
-                             y_step=HOUR_HEIGHT,
+                             width=self.width,
+                             height=self.height,
+                             x_step=self.width/NUM_DAYS,
+                             y_step=self.hour_height,
                              horz_grid_line_width=1,
                              horz_grid_line_color="grey",
                              vert_grid_line_width=1,
@@ -58,26 +67,38 @@ class Calendar(GooCanvas.Canvas, Page):
         GooCanvas.CanvasGrid(parent=self.root, #Minor lines
                              x=0,
                              y=0,
-                             width=width,
-                             height=height,
-                             x_step=width/NUM_DAYS,
-                             y_step=HOUR_HEIGHT/4,
+                             width=self.width,
+                             height=self.height,
+                             x_step=self.width/NUM_DAYS,
+                             y_step=self.hour_height/4.0,
                              horz_grid_line_width=1,
                              horz_grid_line_color="lightgrey",
                              vert_grid_line_width=1,
                              vert_grid_line_color="lightgrey"
                              )
-        for course in self.courses:
-            for day in enumerate([1, 2, 4, 8, 16]):
-                if _occursOnDay(course, day[1]):
-                    duration = _timeAsDecimal(course['endTime']) - _timeAsDecimal(course['startTime'])
-                    GooCanvas.CanvasRect(parent=self.root,
-                                         x=day[0] * width/NUM_DAYS,
-                                         y=HOUR_HEIGHT * _timeAsDecimal(course['startTime']),
-                                         width=width/NUM_DAYS,
-                                         height=duration * HOUR_HEIGHT,
-                                         fill_color="red"
-                                         )
+    
+    def _drawCourse(self, course):
+        for day in enumerate([1, 2, 4, 8, 16]):
+            if _occursOnDay(course, day[1]):
+                duration = _timeAsDecimal(course['endTime']) - _timeAsDecimal(course['startTime'])
+                x = day[0] * self.width/NUM_DAYS
+                y = self.hour_height * (_timeAsDecimal(course['startTime']) - START_HOUR)
+                w = self.width/NUM_DAYS
+                h = duration * self.hour_height
+                GooCanvas.CanvasRect(parent=self.root,
+                                     x=int(x),
+                                     y=int(y),
+                                     width=int(w),
+                                     height=int(h),
+                                     fill_color="lightblue"
+                                     )
+                GooCanvas.CanvasText(parent=self.root,
+                                     x=int(x),
+                                     y=int(y),
+                                     width=int(w),
+                                     height=int(h),
+                                     text=course['code']
+                                     )
     
     def getContextToolbarItems(self):
         addCourseButton = Gtk.ToolButton(Gtk.STOCK_NEW)
