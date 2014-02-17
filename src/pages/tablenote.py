@@ -55,11 +55,11 @@ class TableNote(Gtk.ScrolledWindow, Page):
         return self.filename
         
     def getContextToolbarItems(self):
-        addRowButton = Gtk.ToolButton(Gtk.STOCK_ADD)
+        addRowButton = Gtk.ToolButton(stock_id=Gtk.STOCK_ADD)
         addRowButton.set_label("Add row")
         addRowButton.set_is_important(True)
         addRowButton.connect('clicked', self._insertRow)
-        addColButton = Gtk.ToolButton(Gtk.STOCK_ADD)
+        addColButton = Gtk.ToolButton(stock_id=Gtk.STOCK_ADD)
         addColButton.set_label("Add column")
         addColButton.set_is_important(True)
         addColButton.connect('clicked', self._insertCol)
