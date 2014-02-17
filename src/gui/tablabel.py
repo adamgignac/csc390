@@ -31,7 +31,7 @@ class TabLabel(Gtk.Box):
         self.pack_start(icon, False, False, 0)
         
         # label 
-        label = Gtk.Label(labelText)
+        label = Gtk.Label(label=labelText)
         self.pack_start(label, True, True, 0)
         
         # close button

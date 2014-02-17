@@ -6,7 +6,7 @@ Created on 2013-10-04
 
 #TODO: Allow notes to be deleted
 
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GLib
 from pages.textnote import TextNote #TODO: Import all into a list
 from pages.tablenote import TableNote
 from pages.searchresult import SearchResult
@@ -88,7 +88,7 @@ class MainWindow():
         self.builder.get_object("autosaveProgress").set_visible(False)
         
         #Add autosave timeout
-        GObject.timeout_add_seconds(AUTOSAVE_TIME, self._saveAllWithProgressBar)
+        GLib.timeout_add_seconds(AUTOSAVE_TIME, self._saveAllWithProgressBar)
 
     def displaySearchResults(self, term):
         '''
@@ -133,6 +133,7 @@ class MainWindow():
         progressBar.set_visible(True)
         for count, page in enumerate(self.notebook.get_children()):
             progressBar.set_fraction((count * 100.0) / numPages)
+            print (count * 100.0) / numPages
             page.saveContents()
         progressBar.set_visible(False)
         if __debug__:

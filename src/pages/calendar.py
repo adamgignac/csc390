@@ -81,27 +81,30 @@ class Calendar(GooCanvas.Canvas, Page):
         for day in enumerate([1, 2, 4, 8, 16]):
             if _occursOnDay(course, day[1]):
                 duration = _timeAsDecimal(course['endTime']) - _timeAsDecimal(course['startTime'])
-                x = day[0] * self.width/NUM_DAYS
-                y = self.hour_height * (_timeAsDecimal(course['startTime']) - START_HOUR)
-                w = self.width/NUM_DAYS
-                h = duration * self.hour_height
+                position_x = day[0] * self.width/NUM_DAYS
+                position_y = self.hour_height * (_timeAsDecimal(course['startTime']) - START_HOUR)
+                width = self.width/NUM_DAYS
+                height = duration * self.hour_height
                 GooCanvas.CanvasRect(parent=self.root,
-                                     x=int(x),
-                                     y=int(y),
-                                     width=int(w),
-                                     height=int(h),
+                                     x=int(position_x),
+                                     y=int(position_y),
+                                     width=int(width),
+                                     height=int(height),
                                      fill_color="lightblue"
                                      )
                 GooCanvas.CanvasText(parent=self.root,
-                                     x=int(x),
-                                     y=int(y),
-                                     width=int(w),
-                                     height=int(h),
+                                     x=int(position_x),
+                                     y=int(position_y),
+                                     width=int(width),
+                                     height=int(height),
                                      text=course['code']
                                      )
     
     def getContextToolbarItems(self):
-        addCourseButton = Gtk.ToolButton(Gtk.STOCK_NEW)
+        addCourseButton = Gtk.ToolButton(stock_id=Gtk.STOCK_NEW)
         addCourseButton.set_label("Add course")
         addCourseButton.set_is_important(True)
         return [addCourseButton]
+    
+    def on_addCourse_clicked(self, button):
+        pass
