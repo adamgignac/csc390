@@ -5,7 +5,7 @@ Created on 2013-11-20
 '''
 from pages.page import Page
 from tools.searchengine import SearchEngine
-from tools import constants
+from tools import resources
 
 from gi.repository import Gtk, WebKit
 import os
@@ -41,7 +41,7 @@ class SearchResult(Gtk.ScrolledWindow, Page):
         self.searchTerm = searchTerm
         self.webview = WebKit.WebView()
         self.add(self.webview)
-        self.engine = SearchEngine(constants.NOTES_DIR)
+        self.engine = SearchEngine(resources.NOTES_DIR)
         
         resultsHTML = []
         for result in self.engine.findPattern(searchTerm):
@@ -50,7 +50,7 @@ class SearchResult(Gtk.ScrolledWindow, Page):
             resultsHTML.append(RESULT_BLOCK % (filename, resultContext))
         
         content = HTML % ("\n".join(resultsHTML),)
-        self.webview.load_html_string(content, "file://%s/" % constants.NOTES_DIR)
+        self.webview.load_html_string(content, "file://%s/" % resources.NOTES_DIR)
         self.show_all()
     
     def getContextToolbarItems(self):

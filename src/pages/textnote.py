@@ -10,7 +10,7 @@ from BeautifulSoup import BeautifulSoup
 from xml.sax import saxutils
 
 from pages.page import Page
-from tools import constants
+from tools import resources
 from gui.embeddialog import EmbedDialog
 
 COMMANDS = {
@@ -53,7 +53,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
                                       "TextNoteTemplate.html")
             self.filename = targetFile
         else:
-            targetFile = os.path.join(constants.NOTES_DIR, filename)
+            targetFile = os.path.join(resources.NOTES_DIR, filename)
         with open(targetFile, 'r') as sourceFile:
             try:
                 content = sourceFile.read()
@@ -61,7 +61,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
                 content = "Well, this is awkward..."
         
         self.webview.load_html_string(saxutils.unescape(content), 
-                                      "file://%s/" % constants.NOTES_DIR)
+                                      "file://%s/" % resources.NOTES_DIR)
         self.add(self.webview)
         self.webview.set_editable(True)
         self.settings = self.webview.get_settings()
@@ -73,7 +73,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
         Extracts the contents of the page and writes them to a file.
         '''
         
-        filePath = os.path.join(constants.NOTES_DIR, self.filename)
+        filePath = os.path.join(resources.NOTES_DIR, self.filename)
         with open(filePath, 'w') as saveFile:
             #Get HTML by packing it into the document title
             #Save the old title
@@ -101,6 +101,16 @@ class TextNote(Gtk.ScrolledWindow, Page):
         '''
         return self.filename
 
+    def _makeToolButton(self, iconName, label, command, showText=False):
+        iconPath = resources.getIcon(iconName)
+        button = Gtk.ToolButton()
+        button.set_label(label)
+        icon = Gtk.Image()
+        icon.set_from_file(iconPath)
+        button.set_icon_widget(icon)
+        button.set_is_important(showText)
+        button.connect('clicked', self.onButtonClicked, command)
+        return button
 
     def getContextToolbarItems(self):
         '''
@@ -108,35 +118,27 @@ class TextNote(Gtk.ScrolledWindow, Page):
         type (i.e. text formatting for text notes, drawing tools for
         a diagram, etc)
         '''
-        bold = Gtk.ToolButton(stock_id=Gtk.STOCK_BOLD)
-        bold.connect('clicked', self.onButtonClicked, COMMANDS['bold'])
-        italic = Gtk.ToolButton(stock_id=Gtk.STOCK_ITALIC)
-        italic.connect('clicked', self.onButtonClicked, COMMANDS['italic'])
-        underline = Gtk.ToolButton(stock_id=Gtk.STOCK_UNDERLINE)
-        underline.connect('clicked', self.onButtonClicked, COMMANDS['underline'])
-        embed = Gtk.ToolButton(stock_id=Gtk.STOCK_GO_DOWN)
+        bold = self._makeToolButton("font_bold", "Bold", COMMANDS['bold'])
+        italic = self._makeToolButton("font_italic", "Italic", COMMANDS['italic'])
+        underline = self._makeToolButton("font_underline", "Underline", COMMANDS['underline'])
+        indent = self._makeToolButton("indent_increase", "Indent", COMMANDS['indent'])
+        unindent = self._makeToolButton("indent_decrease", "Outdent", COMMANDS['outdent'])
+        unorderedList = self._makeToolButton("list_bullets", "Bulleted List", COMMANDS['unorderedList'])
+        orderedList = self._makeToolButton("list_num", "Numbered List", COMMANDS['orderedList'])
+        leftJustify = self._makeToolButton("align_left", "Align Left", COMMANDS['justifyLeft'])
+        centerJustify = self._makeToolButton("align_center", "Center", COMMANDS['justifyCenter'])
+        rightJustify = self._makeToolButton("align_right", "Align Right", COMMANDS['justifyRight'])
+        undo = self._makeToolButton("undo", "Undo", COMMANDS['undo'])
+        redo = self._makeToolButton("redo", "Redo", COMMANDS['redo'])
+
+        #Embed button is a special case
+        embed = Gtk.ToolButton()
         embed.set_label("Embed...")
+        embedIcon = Gtk.Image()
+        embedIcon.set_from_file(resources.getIcon("import"))
+        embed.set_icon_widget(embedIcon)
         embed.set_is_important(True)
         embed.connect('clicked', self.onEmbedClicked)
-        indent = Gtk.ToolButton(stock_id=Gtk.STOCK_INDENT)
-        indent.connect('clicked', self.onButtonClicked, COMMANDS['indent'])
-        unindent = Gtk.ToolButton(stock_id=Gtk.STOCK_UNINDENT)
-        unindent.connect('clicked', self.onButtonClicked, COMMANDS['outdent'])
-        #TODO: Add icons for lists
-        unorderedList = Gtk.ToolButton()
-        unorderedList.connect('clicked', self.onButtonClicked, COMMANDS['unorderedList'])
-        orderedList = Gtk.ToolButton()
-        orderedList.connect('clicked', self.onButtonClicked, COMMANDS['orderedList'])
-        leftJustify = Gtk.ToolButton(stock_id=Gtk.STOCK_JUSTIFY_LEFT)
-        leftJustify.connect('clicked', self.onButtonClicked, COMMANDS['justifyLeft'])
-        centerJustify = Gtk.ToolButton(stock_id=Gtk.STOCK_JUSTIFY_CENTER)
-        centerJustify.connect('clicked', self.onButtonClicked, COMMANDS['justifyCenter'])
-        rightJustify = Gtk.ToolButton(stock_id=Gtk.STOCK_JUSTIFY_RIGHT)
-        rightJustify.connect('clicked', self.onButtonClicked, COMMANDS['justifyRight'])
-        undo = Gtk.ToolButton(stock_id=Gtk.STOCK_UNDO)
-        undo.connect('clicked', self.onButtonClicked, COMMANDS['undo'])
-        redo = Gtk.ToolButton(stock_id=Gtk.STOCK_REDO)
-        redo.connect('clicked', self.onButtonClicked, COMMANDS['redo'])
         
         return [bold, italic, underline, embed, indent, unindent, 
                 unorderedList, orderedList, leftJustify, centerJustify,

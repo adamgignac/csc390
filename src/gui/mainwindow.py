@@ -14,14 +14,13 @@ from pages.calendar import Calendar
 from gui.tablabel import TabLabel
 from database.coursetable import CourseTable
 from database.notetable import NoteTable
-from tools import constants
+from tools import resources
 
 import datetime
 import os
 import sqlite3
 
 AUTOSAVE_TIME = 30
-
 
 def getCurrentDate():
     '''
@@ -42,7 +41,7 @@ class MainWindow():
         Constructor
         '''
         
-        conn = sqlite3.Connection(constants.DATABASE_PATH)
+        conn = sqlite3.Connection(resources.DATABASE_PATH)
         self.coursesStore = CourseTable(conn)
         self.notesStore = NoteTable(conn)
         
@@ -83,6 +82,7 @@ class MainWindow():
         self.builder.get_object("baseWindow").show_all()
         
         self.createNewPage(Calendar(self.coursesStore), "Calendar")
+        self.createNewPage(TableNote(), "Table")
         
         #Hide the progress bar unless we're saving
         self.builder.get_object("autosaveProgress").set_visible(False)

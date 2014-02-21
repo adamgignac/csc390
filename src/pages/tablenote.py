@@ -9,7 +9,7 @@ import os
 from xml.sax import saxutils
 
 from pages.page import Page
-from tools import constants
+from tools import resources
 
 class TableNote(Gtk.ScrolledWindow, Page):
     '''
@@ -29,7 +29,7 @@ class TableNote(Gtk.ScrolledWindow, Page):
                                       "TableTemplate.html")
             self.filename = targetFile
         else:
-            targetFile = os.path.join(constants.NOTES_DIR, filename)
+            targetFile = os.path.join(resources.NOTES_DIR, filename)
         with open(targetFile, 'r') as sourceFile:
             try:
                 content = sourceFile.read()
@@ -37,7 +37,7 @@ class TableNote(Gtk.ScrolledWindow, Page):
                 content = "Well, this is awkward..."
         
         self.webview.load_html_string(saxutils.unescape(content),
-                                      "file://%s/" % constants.NOTES_DIR)
+                                      "file://%s/" % resources.NOTES_DIR)
         self.webview.set_editable(True)
         self.add(self.webview)
         self.show_all()
@@ -53,16 +53,21 @@ class TableNote(Gtk.ScrolledWindow, Page):
         Get the base path where the note is stored
         '''
         return self.filename
+
+    def _makeToolButton(self, iconName, label, callback, showText=False):
+        iconPath = resources.getIcon(iconName)
+        button = Gtk.ToolButton()
+        button.set_label(label)
+        button.set_is_important(showText)
+        icon = Gtk.Image()
+        icon.set_from_file(iconPath)
+        button.set_icon_widget(icon)
+        button.connect('clicked', callback)
+        return button
         
     def getContextToolbarItems(self):
-        addRowButton = Gtk.ToolButton(stock_id=Gtk.STOCK_ADD)
-        addRowButton.set_label("Add row")
-        addRowButton.set_is_important(True)
-        addRowButton.connect('clicked', self._insertRow)
-        addColButton = Gtk.ToolButton(stock_id=Gtk.STOCK_ADD)
-        addColButton.set_label("Add column")
-        addColButton.set_is_important(True)
-        addColButton.connect('clicked', self._insertCol)
+        addRowButton = self._makeToolButton("cursor_H_split", "Insert Row", self._insertRow, showText=True)
+        addColButton = self._makeToolButton("cursor_V_split", "Insert Column", self._insertCol, showText=True)
         return [addRowButton, addColButton]
     
     def _insertRow(self, *args):

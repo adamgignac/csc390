@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 from gui.mainwindow import MainWindow
 from gi.repository import Gtk
-from tools import constants
+from tools import resources
 import os
 
-if not os.path.isdir(constants.NOTES_DIR):
-    os.mkdir(constants.NOTES_DIR)
-if not os.path.isdir(os.path.join(constants.NOTES_DIR, "dist")):
-    pass #Copy the bootstrap files
+if not os.path.isdir(resources.NOTES_DIR):
+    os.mkdir(resources.NOTES_DIR)
+if not os.path.isdir(os.path.join(resources.NOTES_DIR, "dist")):
+    pass #TODO: Copy the bootstrap files to NOTES_DIR
 mainWindow = MainWindow()
 Gtk.main()
