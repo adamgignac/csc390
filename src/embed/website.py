@@ -10,7 +10,7 @@ from gui.embedcontextpane import EmbedContextPane
 class WebsiteContextPane(Gtk.HBox, EmbedContextPane):
     def __init__(self):
         super(WebsiteContextPane, self).__init__()
-        self.add(Gtk.Label("URL: "))
+        self.add(Gtk.Label(label="URL: "))
         self.entry = Gtk.Entry()
         self.add(self.entry)
         self.show_all()

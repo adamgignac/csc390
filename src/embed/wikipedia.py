@@ -10,7 +10,7 @@ from gui.embedcontextpane import EmbedContextPane
 class WikiContextPane(Gtk.HBox, EmbedContextPane):
     def __init__(self):
         super(WikiContextPane, self).__init__()
-        self.add(Gtk.Label("Subject: "))
+        self.add(Gtk.Label(label="Subject: "))
         self.entry = Gtk.Entry()
         self.add(self.entry)
         self.show_all()
