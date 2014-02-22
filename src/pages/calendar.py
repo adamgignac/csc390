@@ -4,6 +4,7 @@ Created on 2014-02-16
 @author: adam
 '''
 from pages.page import Page
+from tools import resources
 from gi.repository import Gtk, GooCanvas
 
 def _occursOnDay(course, day):
@@ -101,9 +102,13 @@ class Calendar(GooCanvas.Canvas, Page):
                                      )
     
     def getContextToolbarItems(self):
-        addCourseButton = Gtk.ToolButton(stock_id=Gtk.STOCK_NEW)
+        addCourseButton = Gtk.ToolButton()
+        icon = Gtk.Image()
+        icon.set_from_file(resources.getIconPath("sq_plus"))
+        addCourseButton.set_icon_widget(icon)
         addCourseButton.set_label("Add course")
         addCourseButton.set_is_important(True)
+        addCourseButton.connect('clicked', self.on_addCourse_clicked)
         return [addCourseButton]
     
     def on_addCourse_clicked(self, button):

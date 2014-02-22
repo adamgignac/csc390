@@ -102,7 +102,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
         return self.filename
 
     def _makeToolButton(self, iconName, label, command, showText=False):
-        iconPath = resources.getIcon(iconName)
+        iconPath = resources.getIconPath(iconName)
         button = Gtk.ToolButton()
         button.set_label(label)
         icon = Gtk.Image()
@@ -135,7 +135,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
         embed = Gtk.ToolButton()
         embed.set_label("Embed...")
         embedIcon = Gtk.Image()
-        embedIcon.set_from_file(resources.getIcon("import"))
+        embedIcon.set_from_file(resources.getIconPath("import"))
         embed.set_icon_widget(embedIcon)
         embed.set_is_important(True)
         embed.connect('clicked', self.onEmbedClicked)

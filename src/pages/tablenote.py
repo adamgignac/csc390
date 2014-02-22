@@ -55,7 +55,7 @@ class TableNote(Gtk.ScrolledWindow, Page):
         return self.filename
 
     def _makeToolButton(self, iconName, label, callback, showText=False):
-        iconPath = resources.getIcon(iconName)
+        iconPath = resources.getIconPath(iconName)
         button = Gtk.ToolButton()
         button.set_label(label)
         button.set_is_important(showText)
