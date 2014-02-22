@@ -3,10 +3,12 @@ from gui.mainwindow import MainWindow
 from gi.repository import Gtk
 from tools import resources
 import os
+import shutil
 
 if not os.path.isdir(resources.NOTES_DIR):
     os.mkdir(resources.NOTES_DIR)
-if not os.path.isdir(os.path.join(resources.NOTES_DIR, "dist")):
-    pass #TODO: Copy the bootstrap files to NOTES_DIR
+bootstrap_files = os.path.join(resources.NOTES_DIR, "dist")
+if not os.path.isdir(bootstrap_files): #Move the Bootstrap files to the notes dir
+	shutil.copytree(resources.BOOTSTRAP_SOURCE, bootstrap_files)
 mainWindow = MainWindow()
 Gtk.main()
