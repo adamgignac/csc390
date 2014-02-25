@@ -82,6 +82,9 @@ class MainWindow():
                 treeviewModel.append(newIter, (displayString, note['path']))
 
         #Build note type menu
+        newIcon = Gtk.Image()
+        newIcon.set_from_file(resources.getIconPath("doc_new"))
+        self.builder.get_object("newMenu").set_icon_widget(newIcon)
         noteTypes = self.buildNoteTypesMenu()
         self.builder.get_object("newMenu").set_menu(noteTypes)
 
