@@ -8,6 +8,10 @@
 .project
 .pydevproject
 
+# Sublime files #
+#################
+isidore.sublime*
+
 # Gedit cache files #
 #####################
 *~
