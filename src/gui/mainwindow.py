@@ -61,6 +61,8 @@ class MainWindow():
             'on_searchBox_activate':self.onSearchBoxActivated,
             'on_menu_course_add_activate':self.onMenuCourseAdd,
             'on_open_calendar_clicked':self.onOpenCalendarClicked,
+            'on_deleteNote_activate':self.deleteNote,
+            'on_treeview1_button_press':self.onTreeviewButtonPress,
         }
         self.builder.connect_signals(signalHandlers)
         
@@ -79,6 +81,10 @@ class MainWindow():
                 displayString = course['code'] + ": " + note['date']
                 treeviewModel.append(newIter, (displayString, note['path']))
 
+        #Build note type menu
+        noteTypes = self.buildNoteTypesMenu()
+        self.builder.get_object("newMenu").set_menu(noteTypes)
+
         self.builder.get_object("baseWindow").show_all()
         
         self.createNewPage(Calendar(self.coursesStore), "Calendar")
@@ -89,6 +95,13 @@ class MainWindow():
         
         #Add autosave timeout
         GLib.timeout_add_seconds(AUTOSAVE_TIME, self._saveAllWithProgressBar)
+
+    def buildNoteTypesMenu(self):
+        noteTypes = Gtk.Menu()
+        noteTypes.append(Gtk.MenuItem(label="Text"))
+        noteTypes.append(Gtk.MenuItem(label="Table"))
+        noteTypes.show_all()
+        return noteTypes
 
     def displaySearchResults(self, term):
         '''
@@ -132,8 +145,9 @@ class MainWindow():
         numPages = len(self.notebook.get_children())
         progressBar.set_visible(True)
         for count, page in enumerate(self.notebook.get_children()):
-            progressBar.set_fraction((count * 100.0) / numPages)
-            print (count * 100.0) / numPages
+            progressBar.set_fraction(float(count) / numPages)
+            if __debug__:
+                print float(count) / numPages
             page.saveContents()
         progressBar.set_visible(False)
         if __debug__:
@@ -183,7 +197,8 @@ class MainWindow():
         except NotImplementedError:
             pass
         except IOError:
-            print("Failed to save page")
+            if __debug__:
+                print("Failed to save page")
         pageNumber = self.notebook.page_num(page)
         self.notebook.remove_page(pageNumber)
         
@@ -259,3 +274,11 @@ class MainWindow():
             model.append(None, ["%s (%s)" % (courseCode, courseTitle), None])
             
         dialog.hide()
+
+    def deleteNote(self, *args):
+        if __debug__:
+            print "Delete note"
+
+    def onTreeviewButtonPress(self, event, *args):
+        if __debug__:
+            print "Show menu (mouse)"
