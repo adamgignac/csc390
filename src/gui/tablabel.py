@@ -7,6 +7,7 @@ Written by Micah Carrick
 '''
 
 from gi.repository import Gtk, GObject
+from tools import resources
 
 class TabLabel(Gtk.Box):
     '''
@@ -18,7 +19,7 @@ class TabLabel(Gtk.Box):
         "close-clicked": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()),
     }
 
-    def __init__(self, labelText):
+    def __init__(self, labelText, type="text"):
         '''
         Constructor
         '''
@@ -27,7 +28,11 @@ class TabLabel(Gtk.Box):
         self.set_spacing(5) # spacing: [icon|5px|label|5px|close]  
         
         # icon
-        icon = Gtk.Image.new_from_stock(Gtk.STOCK_FILE, Gtk.IconSize.MENU)
+        icon = Gtk.Image()
+        if type == "text":
+            icon.set_from_file(resources.getIconPath("doc_lines", size=16, style="black"))
+        elif type == "table":
+            icon.set_from_file(resources.getIconPath("3x3_grid", size=16, style="black"))
         self.pack_start(icon, False, False, 0)
         
         # label 

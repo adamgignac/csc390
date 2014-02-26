@@ -121,7 +121,11 @@ class MainWindow():
         Append the given item to the notebook, creating a proper
         label and close button on the tab.
         '''
-        label = TabLabel(labelString)
+        if isinstance(pageContent, TableNote):
+            type_ = "table"
+        else:
+            type_ = "text"
+        label = TabLabel(labelString, type_)
         pageContent.setFilename(labelString + ".html")
         num = self.notebook.append_page(pageContent, label)
         label.connect('close-clicked', self.onTabClosed, pageContent)
