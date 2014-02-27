@@ -62,7 +62,7 @@ class MainWindow():
             'on_menu_course_add_activate':self.onMenuCourseAdd,
             'on_open_calendar_clicked':self.onOpenCalendarClicked,
             'on_deleteNote_activate':self.deleteNote,
-            'on_treeview1_button_press':self.onTreeviewButtonPress,
+            'on_treeview1_button_press_event':self.onTreeviewButtonPress,
         }
         self.builder.connect_signals(signalHandlers)
         
@@ -123,6 +123,8 @@ class MainWindow():
         '''
         if isinstance(pageContent, TableNote):
             type_ = "table"
+        elif isinstance(pageContent, Calendar):
+            type_ = "calendar"
         else:
             type_ = "text"
         label = TabLabel(labelString, type_)
