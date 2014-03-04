@@ -22,7 +22,7 @@ class BlockQuoteContextPane(Gtk.VBox, EmbedContextPane):
         start, end = buffer.get_bounds()
         quote = buffer.get_text(start, end, False)
         source = self.sourceBox.get_text()
-        html = "<blockquote><p>%s</p><p><small>%s</small><p></blockquote>" % (quote, source)
+        html = "<p><blockquote><p>%s</p><p><small>%s</small><p></blockquote></p>" % (quote, source)
         return html
 
 def register():
