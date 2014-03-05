@@ -107,6 +107,7 @@ class Calendar(GooCanvas.Canvas, Page):
         icon.set_from_file(resources.getIconPath("sq_plus"))
         addCourseButton.set_icon_widget(icon)
         addCourseButton.set_label("Add course")
+        addCourseButton.set_tooltip_text("Add course")
         addCourseButton.set_is_important(True)
         addCourseButton.connect('clicked', self.on_addCourse_clicked)
         return [addCourseButton]

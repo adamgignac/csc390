@@ -58,6 +58,7 @@ class TableNote(Gtk.ScrolledWindow, Page):
         iconPath = resources.getIconPath(iconName)
         button = Gtk.ToolButton()
         button.set_label(label)
+        button.set_tooltip_text(label)
         button.set_is_important(showText)
         icon = Gtk.Image()
         icon.set_from_file(iconPath)

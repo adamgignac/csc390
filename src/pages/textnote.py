@@ -105,6 +105,7 @@ class TextNote(Gtk.ScrolledWindow, Page):
         iconPath = resources.getIconPath(iconName)
         button = Gtk.ToolButton()
         button.set_label(label)
+        button.set_tooltip_text(label)
         icon = Gtk.Image()
         icon.set_from_file(iconPath)
         button.set_icon_widget(icon)
