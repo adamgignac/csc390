@@ -57,7 +57,6 @@ class DatabaseTable(object):
             )
         self.cursor.execute(query)
         self.connection.commit()
-        
     
     def listAll(self):
         query = """SELECT * FROM %s""" % (self.tableName,)
@@ -69,4 +68,11 @@ class DatabaseTable(object):
                 resultRow[key] = r[key]
             results.append(resultRow)
         return results
-        
+
+    def remove(self, **kwargs):
+        query = """DELETE FROM %s WHERE """ % (self.tableName,)
+        for key in kwargs.keys():
+            if key not in type(self).columns.keys():
+                raise Exception("Improper column specified")
+            query += "=".join((key, '"' + kwargs[key] + '"'))
+        self.cursor.execute(query)

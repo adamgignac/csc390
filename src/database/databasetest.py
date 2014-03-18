@@ -28,10 +28,14 @@ class Test(unittest.TestCase):
         table = CourseTable(DUMMY_DATABASE)
         table.insert(name="Senior Project", code="CSC390")
         table.insert(name="Operating Systems")
+        self.assertEqual(len(table.listAll()), 2)
+        table.remove(name="Senior Project")
+        self.assertEqual(len(table.listAll()), 1)
     
     def testNotes(self):
         table = NoteTable(DUMMY_DATABASE)
         table.insert(path="/path/to/file", course="CSC390")
+        self.assertEqual(len(table.listAll()), 1)
 
 
 if __name__ == "__main__":
