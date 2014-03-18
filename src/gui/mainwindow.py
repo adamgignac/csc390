@@ -6,7 +6,7 @@ Created on 2013-10-04
 
 #TODO: Allow notes to be deleted
 
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, Gdk
 from pages.textnote import TextNote #TODO: Import all into a list
 from pages.tablenote import TableNote
 from pages.searchresult import SearchResult
@@ -98,6 +98,7 @@ class MainWindow():
         
         #Add autosave timeout
         GLib.timeout_add_seconds(AUTOSAVE_TIME, self._saveAllWithProgressBar)
+
 
     def buildNoteTypesMenu(self):
         noteTypes = Gtk.Menu()
@@ -195,7 +196,22 @@ class MainWindow():
                                    )
             self.builder.get_object('baseWindow').show_all()
             #TODO: Add note to treeview
+            treeviewModel = self.builder.get_object("courseListModel")
+            courseIter = self._findIterForRow(course)
+            displayString = "%s: %s" % (course, date)
+            treeviewModel.append(courseIter, (displayString, page.getFilename()))
+
         dialog.hide()
+
+    def _findIterForRow(self, searchString):
+        '''
+        Returns the iter for the first row containing searchString in its first column
+        '''
+        model = self.builder.get_object("courseListModel")
+        i = model.get_iter_first()
+        while i and searchString not in model.get_value(i, 0):
+            i = model.iter_next(i)
+        return i
     
     def onTabClosed(self, button, page=None):
         '''
@@ -285,9 +301,21 @@ class MainWindow():
         dialog.hide()
 
     def deleteNote(self, *args):
-        if __debug__:
-            print "Delete note"
+        treeview = self.builder.get_object("treeview1")
+        model, selectedIter = treeview.get_selection().get_selected()
+        filePath = model.get_value(selectedIter, 1)
+        msg = "Delete %s?" % model.get_value(selectedIter, 0)
+        dialog = Gtk.MessageDialog(message_type=Gtk.MessageType.QUESTION, buttons=Gtk.ButtonsType.YES_NO, text=msg)
+        if dialog.run() == Gtk.ResponseType.OK:
+            #TODO: Remove from database
+            #TODO: Remove from treeview
+            #TODO: Remove from filesystem
+            pass
+        dialog.hide()
 
-    def onTreeviewButtonPress(self, event, *args):
-        if __debug__:
-            print "Show menu (mouse)"
+    def onTreeviewButtonPress(self, treeview, event):
+        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == Gdk.BUTTON_SECONDARY:
+            #Only show menu if clicking on a child row
+            (path, column, relativeX, relativeY) = treeview.get_path_at_pos(int(event.x), int(event.y))
+            if path.get_depth() > 1:
+                self.builder.get_object("treeviewMenu").popup(None, None, None, None, event.button, event.time)
