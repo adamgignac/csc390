@@ -35,6 +35,8 @@ class TabLabel(Gtk.Box):
             icon.set_from_file(resources.getIconPath("3x3_grid", size=16, style="black"))
         elif type == "calendar":
             icon.set_from_file(resources.getIconPath("calendar_2", size=16, style="black"))
+        elif type == "search":
+            icon.set_from_file(resources.getIconPath("zoom", size=16, style="black"))
         self.pack_start(icon, False, False, 0)
         
         # label 

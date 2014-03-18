@@ -112,7 +112,7 @@ class MainWindow():
         Search for the given term and open a page displaying the results
         '''
         resultsPage = SearchResult(term)
-        label = TabLabel("Search Results: " + term)
+        label = TabLabel("Search Results: " + term, type="search")
         label.connect('close-clicked', self.onTabClosed, resultsPage)
         num = self.notebook.append_page(resultsPage, label)
         self.notebook.set_current_page(num)
