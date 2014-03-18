@@ -76,3 +76,4 @@ class DatabaseTable(object):
                 raise Exception("Improper column specified")
             query += "=".join((key, '"' + kwargs[key] + '"'))
         self.cursor.execute(query)
+        self.connection.commit()

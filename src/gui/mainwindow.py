@@ -306,11 +306,11 @@ class MainWindow():
         filePath = model.get_value(selectedIter, 1)
         msg = "Delete %s?" % model.get_value(selectedIter, 0)
         dialog = Gtk.MessageDialog(message_type=Gtk.MessageType.QUESTION, buttons=Gtk.ButtonsType.YES_NO, text=msg)
-        if dialog.run() == Gtk.ResponseType.OK:
-            #TODO: Remove from database
+        if dialog.run() == Gtk.ResponseType.YES:
+            self.notesStore.remove(path=filePath)
             #TODO: Remove from treeview
+            treeview.get_model().remove(selectedIter)
             #TODO: Remove from filesystem
-            pass
         dialog.hide()
 
     def onTreeviewButtonPress(self, treeview, event):
