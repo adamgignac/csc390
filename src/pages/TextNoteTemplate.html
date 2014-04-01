@@ -32,6 +32,31 @@
                 d.children[1].style.display = 'block';
             }
         }
+        
+    function addRow(tableID){
+        var table = document.getElementById(tableID);
+        var rowCount = table.rows.length;
+        var colCount = table.rows[0].cells.length;
+        var row = table.insertRow(rowCount);
+        for (var i = 0; i < colCount; i++){
+            row.insertCell()
+        }
+    }
+
+    function removeRow(o){
+        var p = o.parentNode.parentNode;
+        p.parentNode.removeChild(p);
+    }
+
+    function addColumn(tableID){
+        var table = document.getElementById(tableID);
+        var colCount = table.rows[0].cells.length;
+        var rowCount = table.rows.length;
+        table.rows[0].appendChild(document.createElement('th'));
+        for (var i = 1; i < rowCount; i++){
+            table.rows[i].insertCell(colCount);
+        }
+    }
     </script>
 </head>
 <body>

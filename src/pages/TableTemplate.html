@@ -5,8 +5,8 @@
 
     <!-- Javascript from http://viralpatel.net/blogs/dynamically-add-remove-rows-in-html-table-using-javascript/ -->
     <script type="text/javascript">
-    function addRow(){
-        var table = document.getElementById('main-table');
+    function addRow(tableID){
+        var table = document.getElementById(tableID);
         var rowCount = table.rows.length;
         var colCount = table.rows[0].cells.length;
         var row = table.insertRow(rowCount);
@@ -20,8 +20,8 @@
         p.parentNode.removeChild(p);
     }
 
-    function addColumn(){
-        var table = document.getElementById('main-table');
+    function addColumn(tableID){
+        var table = document.getElementById(tableID);
         var colCount = table.rows[0].cells.length;
         var rowCount = table.rows.length;
         table.rows[0].appendChild(document.createElement('th'));
