@@ -15,6 +15,7 @@ class NoteTable(DatabaseTable):
         "course":"TEXT",
         "FOREIGN KEY (course)":"REFERENCES course(code)",
         "path":"TEXT",
+        "time":"TEXT",
     }
     
     def listAllForCourse(self, course):

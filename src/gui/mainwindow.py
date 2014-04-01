@@ -28,7 +28,8 @@ def getCurrentDate():
     '''
     now = datetime.datetime.now()
     dateString = "%d-%d-%d" % (now.year, now.month, now.day)
-    return dateString
+    timeString = "%d:%d:%d" % (now.hour, now.minute, now.second)
+    return dateString, timeString
 
 class MainWindow():
     '''
@@ -78,7 +79,7 @@ class MainWindow():
                                         (course['code'], course['name']), None))
             notesForCourse = self.notesStore.listAllForCourse(course['code'])
             for note in notesForCourse:
-                displayString = course['code'] + ": " + note['date']
+                displayString = "%s: %s (%s)" % (course['code'], note['date'], note['time'])
                 treeviewModel.append(newIter, (displayString, note['path']))
 
         #Build note type menu
@@ -101,11 +102,24 @@ class MainWindow():
 
 
     def buildNoteTypesMenu(self):
+        '''
+        Create the context menu for the New button
+        '''
         noteTypes = Gtk.Menu()
-        noteTypes.append(Gtk.MenuItem(label="Text"))
-        noteTypes.append(Gtk.MenuItem(label="Table"))
+        m = Gtk.MenuItem(label="Text")
+        noteTypes.append(m)
+        m.connect('activate', self._onNoteTypesTextClicked)
+        m = Gtk.MenuItem(label="Table")
+        noteTypes.append(m)
+        m.connect('activate', self._onNoteTypesTableClicked)
         noteTypes.show_all()
         return noteTypes
+
+    def _onNoteTypesTextClicked(self, *args):
+        self.onNewClicked(None, pageType="text")
+
+    def _onNoteTypesTableClicked(self, *args):
+        self.onNewClicked(None, pageType="table")
 
     def displaySearchResults(self, term):
         '''
@@ -179,26 +193,32 @@ class MainWindow():
             contextToolbar.add(item)
         contextToolbar.show_all() #Force a refresh of GUI
     
-    def onNewClicked(self, button):
+    def onNewClicked(self, button, pageType="text"):
         '''
         Called when the New button is clicked. Create a new page
         stamped with today's date.
         '''
         dialog = self.builder.get_object("newNoteDialog")
         if dialog.run() == Gtk.ResponseType.OK:
-            page = TextNote()
+            if pageType =="text":
+                page = TextNote()
+            elif pageType =="table":
+                page = TableNote()
             courseSelector = self.builder.get_object("newNote_courseSelector")
             course = courseSelector.get_active_text()
-            date = getCurrentDate()
-            self.createNewPage(page, course + ": " + date)
-            self.notesStore.insert(date=date, course=course, 
+            date, time = getCurrentDate()
+            self.createNewPage(page, "%s: %s (%s)" % (course, date, time))
+            self.notesStore.insert(date=date, time=time, course=course, 
                                    path=page.getFilename()
                                    )
             self.builder.get_object('baseWindow').show_all()
             #TODO: Add note to treeview
             treeviewModel = self.builder.get_object("courseListModel")
             courseIter = self._findIterForRow(course)
-            displayString = "%s: %s" % (course, date)
+            if pageType == "text":
+                displayString = "%s: %s (%s)" % (course, date, time)
+            elif pageType == "table":
+                displayString = "(Table) %s: %s (%s)" % (course, date, time)
             treeviewModel.append(courseIter, (displayString, page.getFilename()))
 
         dialog.hide()
