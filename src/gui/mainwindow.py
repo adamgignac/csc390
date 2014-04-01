@@ -50,6 +50,7 @@ class MainWindow():
         
         _gladeFile = os.path.join(os.path.dirname(__file__), "isidore.glade")
         self.builder.add_from_file(_gladeFile)
+        self.builder.get_object("baseWindow").set_icon_from_file(resources.getMainIconSVG())
         
         #Connect some signals
         signalHandlers = {
@@ -92,7 +93,6 @@ class MainWindow():
         self.builder.get_object("baseWindow").show_all()
         
         self.createNewPage(Calendar(self.coursesStore), "Calendar")
-        self.createNewPage(TableNote(), "Table")
         
         #Hide the progress bar unless we're saving
         self.builder.get_object("autosaveProgress").set_visible(False)

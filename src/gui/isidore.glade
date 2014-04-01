@@ -5,11 +5,15 @@
   <object class="GtkAboutDialog" id="aboutDialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
-    <property name="type_hint">dialog</property>
+    <property name="type_hint">normal</property>
     <property name="program_name">Isidore</property>
-    <property name="version">0.1</property>
+    <property name="version">2014.04</property>
     <property name="comments" translatable="yes">The last scholar of the ancient world...</property>
     <property name="authors">Adam Gignac &lt;gignac.adam@gmail.com&gt;</property>
+    <property name="artists">This app uses the Bootstrap stylesheet by Twitter (2014). (MIT License)
+This app uses the Gentleface Mono icon set by Gentleface (2006-2012). (CC-BY-NC)</property>
+    <property name="logo">isidore_small.png</property>
+    <property name="logo_icon_name"/>
     <property name="license_type">gpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">

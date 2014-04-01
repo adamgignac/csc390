@@ -16,3 +16,6 @@ def getIconPath(name, style="white", size=24):
 	assert size in [16, 24, 32, 48]
 	path = os.path.join(os.path.dirname(__file__), "icons/%s/png/%s_icon&%d.png" % (style, name, size))
 	return path
+
+def getMainIconSVG():
+	return os.path.join(os.path.dirname(__file__), "icons/isidore.svg")
