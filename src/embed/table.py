@@ -5,7 +5,7 @@ Created on 2014-03-31
 '''
 
 from gi.repository import Gtk
-from gui.embedcontextpane import EmbedContextPane
+from embedcontextpane import EmbedContextPane
 
 TEMPLATE = """
 </p>

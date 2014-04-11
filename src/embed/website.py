@@ -5,7 +5,7 @@ Created on 2013-12-23
 '''
 
 from gi.repository import Gtk
-from gui.embedcontextpane import EmbedContextPane
+from embedcontextpane import EmbedContextPane
 
 class WebsiteContextPane(Gtk.HBox, EmbedContextPane):
     def __init__(self):

@@ -5,7 +5,7 @@ Created on 2014-01-09
 '''
 
 from gi.repository import Gtk
-from gui.embedcontextpane import EmbedContextPane
+from embedcontextpane import EmbedContextPane
 
 class BlockQuoteContextPane(Gtk.VBox, EmbedContextPane):
     def __init__(self):

@@ -9,7 +9,7 @@ from databasetable import DatabaseTable
 from coursetable import CourseTable
 from notetable import NoteTable
 
-class BadlyMadeSubclass(DatabaseTable):
+class TestBadlyMadeSubclass(DatabaseTable):
     '''This will throw an exception because it is improperly named'''
     columns = {'dummy':'TEXT'}
 
@@ -22,7 +22,7 @@ class Test(unittest.TestCase):
         self.assertRaises(Exception, DatabaseTable, DUMMY_DATABASE)
     
     def testBadTableName(self):
-        self.assertRaises(Exception, BadlyMadeSubclass, DUMMY_DATABASE)
+        self.assertRaises(Exception, TestBadlyMadeSubclass, DUMMY_DATABASE)
 
     def testCourses(self):
         table = CourseTable(DUMMY_DATABASE)
